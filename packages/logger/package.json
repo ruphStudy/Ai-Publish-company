@@ -1,0 +1,1 @@
+{"name":"@ai-publishing/logger","version":"0.1.0","private":true,"type":"module","main":"dist/index.js","types":"dist/index.d.ts","scripts":{"build":"tsc -p tsconfig.json","lint":"eslint src --ext .ts","typecheck":"tsc --noEmit -p tsconfig.json","test":"echo \"No logger package tests yet\""},"devDependencies":{}}
