@@ -17,7 +17,6 @@ import {
   AMAZON_PAAPI_CONTENT_ENCODING,
   AMAZON_OPERATION_TARGETS,
 } from '../constants/amazon.constants';
-import { AmazonProviderExceptionHandler } from '../errors/amazon-error.handler';
 import { IAmazonProviderAdapter } from './amazon-provider-adapter.interface';
 
 @Injectable()
@@ -94,7 +93,7 @@ export class AmazonProviderAdapter implements IAmazonProviderAdapter {
     operationTarget: string,
   ): Record<string, string> {
     const now = new Date();
-    const amzDate = now.toISOString().replace(/[:\-]|\.\d{3}/g, '');
+    const amzDate = now.toISOString().replace(/[:-]|\.\d{3}/g, '');
     const dateStamp = amzDate.slice(0, 8);
 
     const payloadHash = crypto.createHash('sha256').update(body, 'utf8').digest('hex');

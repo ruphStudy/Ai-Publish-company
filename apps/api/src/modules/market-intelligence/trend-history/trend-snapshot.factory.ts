@@ -4,8 +4,9 @@ import { AIClassificationResponseDto } from '../ai-classification/dto';
 import { MarketKnowledgeResponseDto } from '../knowledge-database/dto';
 import { OpportunityScoreResponseDto } from '../opportunity-scoring/dto';
 import {
-  TREND_HISTORY_CONFIG_TOKEN,
-  TrendHistoryConfig,
+  TrendHistoryConfig} from './config/trend-history.config';
+import {
+  TREND_HISTORY_CONFIG_TOKEN
 } from './config/trend-history.config';
 import { TrendSnapshotData } from './models/trend-history.model';
 

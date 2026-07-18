@@ -1,5 +1,5 @@
-import { AIClassificationResponseDto } from '../../ai-classification/dto';
-import { MarketKnowledgeResponseDto } from '../../knowledge-database/dto';
+import type { AIClassificationResponseDto } from '../../ai-classification/dto';
+import type { MarketKnowledgeResponseDto } from '../../knowledge-database/dto';
 
 export enum OpportunityGrade {
   A = 'A',

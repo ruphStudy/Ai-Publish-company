@@ -1,4 +1,4 @@
-import { MarketKnowledgeResponseDto } from '../../knowledge-database/dto';
+import type { MarketKnowledgeResponseDto } from '../../knowledge-database/dto';
 
 export enum ClassificationContentType {
   BOOK = 'book',

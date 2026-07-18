@@ -93,7 +93,7 @@ export class CreateProviderRegistrationDto {
   @IsOptional()
   rateLimitRpd?: number;
 
-  @ApiPropertyOptional({ description: 'Provider-specific configuration', type: 'object' })
+  @ApiPropertyOptional({ description: 'Provider-specific configuration', type: 'object', additionalProperties: true })
   @IsObject()
   @IsOptional()
   customConfig?: Record<string, unknown>;
@@ -155,7 +155,7 @@ export class UpdateProviderRegistrationDto {
   @IsOptional()
   rateLimitRpd?: number;
 
-  @ApiPropertyOptional({ description: 'Provider-specific configuration', type: 'object' })
+  @ApiPropertyOptional({ description: 'Provider-specific configuration', type: 'object', additionalProperties: true })
   @IsObject()
   @IsOptional()
   customConfig?: Record<string, unknown>;

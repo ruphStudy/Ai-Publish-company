@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
@@ -124,11 +125,10 @@ MarketKnowledgeSchema.index(
   { name: 'idx_market_knowledge_text_search' },
 );
 
-MarketKnowledgeSchema.pre(/^find/, function (next) {
-  const query = this as any;
+MarketKnowledgeSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

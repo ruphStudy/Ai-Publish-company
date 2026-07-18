@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import {
-  HealthCheck,
   HealthCheckService,
-  MongooseHealthIndicator,
+  MongooseHealthIndicator} from '@nestjs/terminus';
+import {
+  HealthCheck
 } from '@nestjs/terminus';
 
-import { HealthService, HealthResponse } from './health.service';
+import { HealthService } from './health.service';
+import type { HealthResponse } from './health.service';
 import { RedisHealthIndicator } from './indicators/redis.health';
 import { Public } from '../auth/decorators/public.decorator';
 

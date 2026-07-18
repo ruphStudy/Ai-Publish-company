@@ -19,7 +19,7 @@ export class SchedulerJobResponseDto {
   @ApiPropertyOptional({ enum: MarketDataType, nullable: true })
   dataType: MarketDataType | null;
 
-  @ApiProperty({ type: 'object', example: { market: 'US' } })
+  @ApiProperty({ type: 'object', additionalProperties: true, example: { market: 'US' } })
   params: Record<string, unknown>;
 
   @ApiPropertyOptional({ nullable: true, example: 3600000 })

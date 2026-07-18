@@ -1,6 +1,7 @@
 import { DataSourceProvider } from '../../../entities/market-intelligence.entity';
-import { ProviderError, ProviderErrorCode } from '../../interfaces/provider.interface';
-import { GoogleTrendsApiError } from '../interfaces/google-trends.interface';
+import type { ProviderError} from '../../interfaces/provider.interface';
+import { ProviderErrorCode } from '../../interfaces/provider.interface';
+import type { GoogleTrendsApiError } from '../interfaces/google-trends.interface';
 import { GOOGLE_TRENDS_ERROR_CODE_MAP } from '../constants/google-trends.constants';
 
 export class GoogleTrendsExceptionHandler {
@@ -59,8 +60,8 @@ export class GoogleTrendsExceptionHandler {
 
   static fromException(error: unknown): ProviderError {
     if (error instanceof Error) {
-      const code = (error as any).code as string | undefined;
-      const status = (error as any).status as number | undefined;
+      const details = error as Error & { code?: string; status?: number };
+      const { code, status } = details;
 
       if (status !== undefined) {
         return GoogleTrendsExceptionHandler.fromHttpStatus(status, error.message);

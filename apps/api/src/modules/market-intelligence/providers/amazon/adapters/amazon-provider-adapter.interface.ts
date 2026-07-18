@@ -1,5 +1,5 @@
-import { AmazonProviderConfig } from '../config/amazon-provider.config';
-import {
+import type { AmazonProviderConfig } from '../config/amazon-provider.config';
+import type {
   AmazonSearchItemsRequest,
   AmazonGetItemsRequest,
   AmazonSearchItemsResponse,

@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
@@ -89,10 +90,9 @@ ProviderRegistrationSchema.index({ status: 1, isEnabled: 1 });
 ProviderRegistrationSchema.index({ priority: 1 });
 ProviderRegistrationSchema.index({ isEnabled: 1, isDeleted: 1 });
 
-ProviderRegistrationSchema.pre(/^find/, function (next) {
-  const query = this as any;
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+ProviderRegistrationSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
   next();
 });

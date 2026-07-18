@@ -22,9 +22,10 @@ import {
 
 import { BookService } from './book.service';
 import {
+  BookQueryDto} from './dto';
+import {
   CreateBookDto,
   UpdateBookDto,
-  BookQueryDto,
   BookResponseDto,
   PaginatedBookResponseDto,
 } from './dto';
@@ -33,7 +34,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { UserRole } from '../auth/entities/user.entity';
-import type { User } from '../auth/entities/user.entity';
+import { User } from '../auth/entities/user.entity';
 
 @ApiTags('books')
 @Controller('books')

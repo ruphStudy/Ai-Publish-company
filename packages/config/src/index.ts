@@ -40,4 +40,7 @@ export interface AppConfiguration {
   swagger: {
     enabled: boolean;
   };
+  security: {
+    bodyLimit: string;
+  };
 }

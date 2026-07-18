@@ -1,0 +1,5 @@
+import { Type } from 'class-transformer';
+import { IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { FactConsistencyScope, FactConsistencyStatus, FactConsistencyTargetType, FactRiskLevel } from '../entities/fact-consistency.entity';
+export class CreateFactConsistencyDto { @IsMongoId() projectId: string; @IsEnum(FactConsistencyTargetType) targetType: FactConsistencyTargetType; @IsString() targetId: string; @IsEnum(FactConsistencyScope) scope: FactConsistencyScope; @IsString() manuscriptVersion: string; @IsOptional() @IsString() createdBy?: string; }
+export class FactConsistencyQueryDto { @IsOptional() @IsMongoId() projectId?: string; @IsOptional() @IsString() targetId?: string; @IsOptional() @IsEnum(FactConsistencyStatus) status?: FactConsistencyStatus; @IsOptional() @IsEnum(FactRiskLevel) riskLevel?: FactRiskLevel; @IsOptional() @Type(() => Number) @IsNumber() @Min(1) page = 1; @IsOptional() @Type(() => Number) @IsNumber() @Min(1) @Max(100) limit = 20; }

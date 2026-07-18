@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { DataSourceProvider, MarketDataType } from '../../entities/market-intelligence.entity';
 import { DataSourceParams } from '../../interfaces/data-source.interface';
+import { ProviderErrorCode } from '../interfaces/provider.interface';
 import { IProvider, ProviderConfig, ProviderResponse } from '../interfaces/provider.interface';
 import { ProviderRegistryService } from '../registry/provider-registry.service';
 
@@ -81,7 +82,7 @@ export class ProviderFactoryService {
         rawData: null,
         metadata: {},
         error: {
-          code: 'PROVIDER_UNAVAILABLE' as any,
+          code: ProviderErrorCode.UNAVAILABLE,
           message: 'All providers are unavailable',
           provider: params.provider,
           retryable: true,

@@ -1,4 +1,4 @@
-import {
+import type {
   OpportunityScoreResult,
   OpportunityScoringContext,
 } from '../models/opportunity-score.model';

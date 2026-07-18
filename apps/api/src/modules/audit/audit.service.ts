@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 
-import { AuditLog, AuditAction, AuditEntityType } from './entities/audit-log.entity';
+import type { AuditAction, AuditEntityType } from './entities/audit-log.entity';
+import { AuditLog } from './entities/audit-log.entity';
 
 export interface AuditLogParams {
   action: AuditAction;

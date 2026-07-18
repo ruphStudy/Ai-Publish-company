@@ -1,0 +1,6 @@
+import { Injectable } from '@nestjs/common';
+import { ContentImprovementDocument } from './entities/content-improvement.entity';
+@Injectable()
+export class ContentImprovementMapper {
+  toResponse(item: ContentImprovementDocument) { return { id: item.id, improvementId: item.improvementId, projectId: item.projectId, qualityReviewId: item.qualityReviewId, targetType: item.targetType, targetId: item.targetId, scope: item.scope, mode: item.mode, minimumSeverity: item.minimumSeverity, originalContent: item.originalContent, improvedContent: item.improvedContent, originalWordCount: item.originalWordCount, improvedWordCount: item.improvedWordCount, wordCountDifference: item.wordCountDifference, appliedIssueIds: item.appliedIssueIds, unresolvedIssueIds: item.unresolvedIssueIds, improvementSummary: item.improvementSummary, improvementMetrics: item.improvementMetrics, aiProvider: item.aiProvider, aiModel: item.aiModel, tokenUsage: item.tokenUsage, estimatedCost: item.estimatedCost, latencyMs: item.latencyMs, requestMetadata: item.requestMetadata, status: item.status, improvementVersion: item.improvementVersion, failureCode: item.failureCode, failureMessage: item.failureMessage, appliedContentVersionIds: item.appliedContentVersionIds, version: item.get('version') as number, createdAt: item.createdAt, updatedAt: item.updatedAt }; }
+}

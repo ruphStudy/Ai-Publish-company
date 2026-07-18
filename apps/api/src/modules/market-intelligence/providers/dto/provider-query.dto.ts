@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, IsEnum, IsBoolean, IsInt, Min, Max, IsIn } from 'class-validator';
+import { IsOptional, IsEnum, IsBoolean, IsInt, Min, Max, IsIn } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 import { DataSourceProvider } from '../../entities/market-intelligence.entity';

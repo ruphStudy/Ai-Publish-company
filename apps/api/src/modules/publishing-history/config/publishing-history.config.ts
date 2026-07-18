@@ -1,0 +1,4 @@
+import { PublishingHistoryCategory } from '../entities/publishing-history.entity';
+
+export interface PublishingHistoryPolicy { historyRetentionDays: number; auditRetentionDays: number; eventCategories: PublishingHistoryCategory[]; searchableFields: string[]; exportEnabled: boolean; immutable: boolean; maskedKeys: string[]; defaultPageSize: number; maximumPageSize: number }
+export const publishingHistoryDefaultPolicy: PublishingHistoryPolicy = { historyRetentionDays: 2555, auditRetentionDays: 2555, eventCategories: Object.values(PublishingHistoryCategory), searchableFields: ['projectId', 'workflowId', 'orchestrationId', 'targetExecutionId', 'providerKey', 'eventType', 'category', 'actor', 'source', 'correlationId'], exportEnabled: true, immutable: true, maskedKeys: ['token', 'secret', 'password', 'cookie', 'authorization', 'credential', 'mfa'], defaultPageSize: 25, maximumPageSize: 100 };

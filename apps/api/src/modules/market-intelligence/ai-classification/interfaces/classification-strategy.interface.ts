@@ -1,4 +1,4 @@
-import {
+import type {
   ClassificationContext,
   ClassificationResult,
 } from '../models/classification-result.model';

@@ -6,8 +6,10 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import type { Model} from 'mongoose';
+import { Types } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { permissionsForRoles } from '@ai-publishing/shared';
 
 import { User } from './entities/user.entity';
 import { RegisterDto } from './dto/register.dto';
@@ -204,6 +206,7 @@ export class AuthService {
         firstName: user.firstName,
         lastName: user.lastName,
         roles: user.roles,
+        permissions: permissionsForRoles(user.roles),
       },
     };
   }

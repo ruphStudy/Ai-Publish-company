@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { TrendHistory } from './entities/trend-history.entity';
+import type { TrendHistory } from './entities/trend-history.entity';
 import {
   HistoricalMetricStatistics,
   HistoricalStatisticsResult,

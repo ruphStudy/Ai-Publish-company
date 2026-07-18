@@ -22,10 +22,11 @@ import {
 
 import { SchedulerService } from './scheduler.service';
 import {
+  SchedulerJobQueryDto,
+  JobExecutionQueryDto} from './dto';
+import {
   CreateSchedulerJobDto,
   UpdateSchedulerJobDto,
-  SchedulerJobQueryDto,
-  JobExecutionQueryDto,
   SchedulerJobResponseDto,
   JobExecutionResponseDto,
   PaginatedSchedulerJobResponseDto,
@@ -38,7 +39,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
-import type { User } from '../../auth/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
 
 @ApiTags('market-intelligence/scheduler')
 @Controller('market-intelligence/scheduler')

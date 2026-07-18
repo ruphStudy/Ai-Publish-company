@@ -1,0 +1,9 @@
+import { Type } from 'class-transformer';
+import { IsArray, IsDateString, IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Max, Min } from 'class-validator';
+import { PublishingScope } from '../../publishing-workflow/entities/publishing-workflow.entity';
+import { MultiPlatformConflictPolicy, MultiPlatformExecutionStrategy, MultiPlatformFailurePolicy, MultiPlatformOrchestrationStatus, MultiPlatformPartialSuccessPolicy } from '../entities/multi-platform-publishing.entity';
+
+export class CreateMultiPlatformPublishingDto { @IsMongoId() projectId: string; @IsString() manuscriptVersion: string; @IsEnum(PublishingScope) publicationScope: PublishingScope; @IsOptional() @IsArray() @IsString({ each: true }) providerKeys?: string[]; @IsOptional() @IsEnum(MultiPlatformExecutionStrategy) executionStrategy?: MultiPlatformExecutionStrategy; @IsOptional() @IsString() policyProfile?: string; @IsOptional() @IsEnum(MultiPlatformPartialSuccessPolicy) partialSuccessPolicy?: MultiPlatformPartialSuccessPolicy; @IsOptional() @IsEnum(MultiPlatformFailurePolicy) failurePolicy?: MultiPlatformFailurePolicy; @IsOptional() @IsDateString() scheduledAt?: string; @IsOptional() @IsString() idempotencyKey?: string; @IsOptional() @IsString() requestedBy?: string; }
+export class ResolveConflictDto { @IsString() conflictId: string; @IsEnum(MultiPlatformConflictPolicy) resolution: MultiPlatformConflictPolicy; @IsOptional() @IsString() note?: string; }
+export class MultiPlatformActionDto { @IsOptional() @IsString() reason?: string; }
+export class MultiPlatformQueryDto { @IsOptional() @IsMongoId() projectId?: string; @IsOptional() @IsString() manuscriptVersion?: string; @IsOptional() @IsEnum(MultiPlatformOrchestrationStatus) status?: MultiPlatformOrchestrationStatus; @IsOptional() @Type(() => Number) @IsNumber() @Min(1) page = 1; @IsOptional() @Type(() => Number) @IsNumber() @Min(1) @Max(100) limit = 20; }

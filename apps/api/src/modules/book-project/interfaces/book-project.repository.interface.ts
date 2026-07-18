@@ -1,11 +1,11 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import {
+import type {
   BookProjectQueryDto,
   CreateBookProjectDto,
   UpdateBookProjectDto,
 } from '../dto';
-import { BookProject } from '../entities/book-project.entity';
+import type { BookProject } from '../entities/book-project.entity';
 
 export interface PaginatedBookProjectResult {
   data: BookProject[];

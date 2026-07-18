@@ -1,7 +1,8 @@
-import {
+import type {
   ArgumentsHost,
+  ExceptionFilter} from '@nestjs/common';
+import {
   Catch,
-  ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
@@ -9,6 +10,7 @@ import {
 import type { Request, Response } from 'express';
 
 import { ERROR_CODES } from '@ai-publishing/shared';
+import { safeErrorStack } from '../../core/security/security-redaction';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -20,7 +22,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = context.getRequest<Request>();
     const isHttpException = exception instanceof HttpException;
     const status = isHttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const correlationId = (request as any).correlationId;
+    const correlationId = (request as Request & { correlationId?: string }).correlationId;
 
     const errorResponse = {
       statusCode: status,
@@ -34,7 +36,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     this.logger.error({
       message: 'Exception caught',
       error: exception instanceof Error ? exception.message : 'Unknown error',
-      stack: exception instanceof Error ? exception.stack : undefined,
+      stack: safeErrorStack(exception),
       correlationId,
       method: request.method,
       url: request.url,

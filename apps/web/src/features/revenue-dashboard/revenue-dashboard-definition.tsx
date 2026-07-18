@@ -1,0 +1,65 @@
+import { DollarSign } from 'lucide-react';
+import type { DashboardDefinition, DashboardWidgetDefinition } from '@/features/analytics-dashboard/types';
+import { platformDefaults } from '@/features/platform-registry';
+import { CurrencyCoverage, RecentRevenueActivity, RefundAdjustmentAnalysis, RevenueByBookAndEdition, RevenueByCountryTerritory, RevenueByFormat, RevenueByMarketplace, RevenueByProvider, RevenueDataFreshness, RevenueDistribution, RevenueOverview, RevenueTrend } from './components/revenue-dashboard-sections';
+
+export const revenueDashboardWidgets: DashboardWidgetDefinition[] = [
+  { key: 'REVENUE_OVERVIEW', type: 'KPI', title: 'Revenue Overview', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'], queryDefinition: { queryKeyBase: 'revenue-overview' }, defaultSize: { columns: 12, rows: 2 }, minimumSize: { columns: 6, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueOverview filters={filters} /> },
+  { key: 'REVENUE_TREND', type: 'TREND_CHART', title: 'Revenue Trend', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'], queryDefinition: { queryKeyBase: 'revenue-trend' }, defaultSize: { columns: 12, rows: 3 }, minimumSize: { columns: 6, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV', 'PNG'], version: 1, render: ({ filters }) => <RevenueTrend filters={filters} /> },
+  { key: 'REVENUE_BOOK_EDITION', type: 'RANKING', title: 'Revenue by Book and Edition', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION'], queryDefinition: { queryKeyBase: 'revenue-book-edition' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueByBookAndEdition filters={filters} /> },
+  { key: 'REVENUE_PROVIDER', type: 'BREAKDOWN', title: 'Revenue by Provider', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'PROVIDER'], queryDefinition: { queryKeyBase: 'revenue-provider' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueByProvider filters={filters} /> },
+  { key: 'REVENUE_MARKETPLACE', type: 'BREAKDOWN', title: 'Revenue by Marketplace', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'MARKETPLACE'], queryDefinition: { queryKeyBase: 'revenue-marketplace' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueByMarketplace filters={filters} /> },
+  { key: 'REVENUE_GEOGRAPHY', type: 'BAR_CHART', title: 'Revenue by Country/Territory', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'COUNTRY', 'TERRITORY'], queryDefinition: { queryKeyBase: 'revenue-geography' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueByCountryTerritory filters={filters} /> },
+  { key: 'REVENUE_FORMAT', type: 'BAR_CHART', title: 'Revenue by Format', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'FORMAT'], queryDefinition: { queryKeyBase: 'revenue-format' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueByFormat filters={filters} /> },
+  { key: 'REVENUE_DISTRIBUTION', type: 'BREAKDOWN', title: 'Revenue Distribution', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'FORMAT'], queryDefinition: { queryKeyBase: 'revenue-distribution' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueDistribution filters={filters} /> },
+  { key: 'REVENUE_REFUNDS_ADJUSTMENTS', type: 'TABLE', title: 'Refund and Adjustment Analysis', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'PROVIDER', 'MARKETPLACE'], queryDefinition: { queryKeyBase: 'revenue-refunds-adjustments' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RefundAdjustmentAnalysis filters={filters} /> },
+  { key: 'REVENUE_CURRENCY_COVERAGE', type: 'HEALTH', title: 'Currency Coverage', category: 'FINANCIAL', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'PROVIDER', 'MARKETPLACE', 'COUNTRY'], queryDefinition: { queryKeyBase: 'revenue-currency-coverage' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <CurrencyCoverage filters={filters} /> },
+  { key: 'REVENUE_DATA_FRESHNESS', type: 'HEALTH', title: 'Revenue Data Freshness', category: 'OPERATIONS', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'revenue-data-freshness' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RevenueDataFreshness filters={filters} /> },
+  { key: 'REVENUE_RECENT_ACTIVITY', type: 'ACTIVITY', title: 'Recent Revenue Activity', category: 'OPERATIONS', requiredPermissions: ['analytics:financial:read'], supportedDashboards: ['revenue-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'revenue-recent-activity' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RecentRevenueActivity filters={filters} /> },
+];
+
+export const revenueDashboardDefinition: DashboardDefinition = {
+  key: 'revenue-dashboard',
+  route: '/analytics/revenue',
+  title: 'Revenue Dashboard',
+  description: 'Financial analytics for gross revenue, net revenue, refunds, adjustments and currency-normalized performance.',
+  icon: DollarSign,
+  category: 'FINANCIAL',
+  order: 50,
+  enabled: true,
+  featureFlag: 'revenueDashboard',
+  requiredPermissions: ['analytics:financial:read'],
+  supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'],
+  defaultScope: 'PORTFOLIO',
+  supportedFilters: ['projectId', 'portfolioId', 'bookIds', 'editionIds', 'authorIds', 'seriesIds', 'providerKeys', 'marketplaceIds', 'countryCodes', 'territoryCodes', 'formats', 'period', 'dateRange', 'comparisonMode', 'comparisonDateRange', 'currencyCode', 'transactionTypes', 'statuses', 'search'],
+  defaultFilters: { scope: 'PORTFOLIO', period: 'LAST_30_DAYS', comparisonMode: 'PREVIOUS_PERIOD', currencyCode: platformDefaults.reportingCurrency },
+  supportedPeriods: ['TODAY', 'YESTERDAY', 'LAST_7_DAYS', 'LAST_30_DAYS', 'LAST_90_DAYS', 'CURRENT_WEEK', 'PREVIOUS_WEEK', 'CURRENT_MONTH', 'PREVIOUS_MONTH', 'CURRENT_QUARTER', 'CURRENT_YEAR', 'CUSTOM'],
+  defaultPeriod: 'LAST_30_DAYS',
+  supportedComparisonModes: ['NONE', 'PREVIOUS_PERIOD', 'PREVIOUS_CALENDAR_PERIOD', 'PREVIOUS_YEAR', 'CUSTOM'],
+  defaultComparisonMode: 'PREVIOUS_PERIOD',
+  supportedCurrencies: platformDefaults.supportedCurrencies,
+  widgetDefinitions: revenueDashboardWidgets,
+  layoutDefinition: {
+    columns: 12,
+    density: 'COMFORTABLE',
+    minWidgetHeight: 180,
+    items: [
+      { widgetKey: 'REVENUE_OVERVIEW', colSpan: 12, order: 1 },
+      { widgetKey: 'REVENUE_TREND', colSpan: 12, order: 2 },
+      { widgetKey: 'REVENUE_BOOK_EDITION', colSpan: 6, order: 3 },
+      { widgetKey: 'REVENUE_PROVIDER', colSpan: 6, order: 4 },
+      { widgetKey: 'REVENUE_MARKETPLACE', colSpan: 6, order: 5 },
+      { widgetKey: 'REVENUE_GEOGRAPHY', colSpan: 6, order: 6 },
+      { widgetKey: 'REVENUE_FORMAT', colSpan: 6, order: 7 },
+      { widgetKey: 'REVENUE_DISTRIBUTION', colSpan: 6, order: 8 },
+      { widgetKey: 'REVENUE_REFUNDS_ADJUSTMENTS', colSpan: 6, order: 9 },
+      { widgetKey: 'REVENUE_CURRENCY_COVERAGE', colSpan: 6, order: 10 },
+      { widgetKey: 'REVENUE_DATA_FRESHNESS', colSpan: 6, order: 11 },
+      { widgetKey: 'REVENUE_RECENT_ACTIVITY', colSpan: 6, order: 12 },
+    ],
+  },
+  exportCapabilities: ['CSV', 'XLSX'],
+  refreshCapabilities: ['DASHBOARD', 'WIDGET', 'VISIBLE_WIDGETS', 'BACKGROUND'],
+  savedViewSupport: true,
+  metadata: { domain: 'revenue', defaultGranularity: 'DAILY', backendNormalizedFinancials: true },
+};

@@ -1,18 +1,20 @@
-import {
-  Injectable,
+import type {
   NestInterceptor,
   ExecutionContext,
-  CallHandler,
+  CallHandler} from '@nestjs/common';
+import {
+  Injectable,
   Logger,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { redactSensitive, safeErrorStack } from '../../core/security/security-redaction';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly logger = new Logger(LoggingInterceptor.name);
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     const request = context.switchToHttp().getRequest();
     const { method, url, body, correlationId } = request;
     const userAgent = request.get('user-agent') || '';
@@ -26,11 +28,11 @@ export class LoggingInterceptor implements NestInterceptor {
       correlationId,
       userAgent,
       ip,
-      body: this.sanitizeBody(body),
+      body: redactSensitive(body),
     });
 
     return next.handle().pipe(
-      tap((data) => {
+      tap(() => {
         const response = context.switchToHttp().getResponse();
         const { statusCode } = response;
         const responseTime = Date.now() - startTime;
@@ -44,7 +46,7 @@ export class LoggingInterceptor implements NestInterceptor {
           responseTime: `${responseTime}ms`,
         });
       }),
-      catchError((error) => {
+      catchError((error: unknown) => {
         const response = context.switchToHttp().getResponse();
         const { statusCode } = response;
         const responseTime = Date.now() - startTime;
@@ -56,8 +58,8 @@ export class LoggingInterceptor implements NestInterceptor {
           correlationId,
           statusCode,
           responseTime: `${responseTime}ms`,
-          error: error.message,
-          stack: error.stack,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          stack: safeErrorStack(error),
         });
 
         throw error;
@@ -65,18 +67,4 @@ export class LoggingInterceptor implements NestInterceptor {
     );
   }
 
-  private sanitizeBody(body: any): any {
-    if (!body) return body;
-    
-    const sanitized = { ...body };
-    const sensitiveFields = ['password', 'token', 'refreshToken', 'secret'];
-    
-    for (const field of sensitiveFields) {
-      if (sanitized[field]) {
-        sanitized[field] = '***REDACTED***';
-      }
-    }
-    
-    return sanitized;
-  }
 }

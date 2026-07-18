@@ -10,6 +10,20 @@ const parseOrigins = (value: string): string[] => {
   return value.split(',').map((origin) => origin.trim());
 };
 
+const requireProductionSecret = (name: string, value: string | undefined, fallback: string): string => {
+  if (process.env.NODE_ENV === 'production' && (!value || value === fallback || value.length < 32)) {
+    throw new Error(`${name} must be configured with a strong production value`);
+  }
+  return value ?? fallback;
+};
+
+const productionOrigins = (origins: string[]): string[] => {
+  if (process.env.NODE_ENV === 'production' && origins.includes('*')) {
+    throw new Error('CORS_ORIGINS must not be wildcard in production');
+  }
+  return origins;
+};
+
 export const configuration = (): AppConfiguration => ({
   nodeEnv: (process.env.NODE_ENV as AppConfiguration['nodeEnv']) ?? 'development',
   logLevel: (process.env.LOG_LEVEL as AppConfiguration['logLevel']) ?? 'info',
@@ -17,9 +31,9 @@ export const configuration = (): AppConfiguration => ({
     port: Number(process.env.API_PORT ?? 3000),
   },
   jwt: {
-    secret: process.env.JWT_SECRET ?? 'change-me-with-at-least-32-chars',
+    secret: requireProductionSecret('JWT_SECRET', process.env.JWT_SECRET, 'change-me-with-at-least-32-chars'),
     expiresIn: process.env.JWT_EXPIRES_IN ?? '15m',
-    refreshSecret: process.env.JWT_REFRESH_SECRET ?? 'change-me-refresh-with-at-least-32-chars',
+    refreshSecret: requireProductionSecret('JWT_REFRESH_SECRET', process.env.JWT_REFRESH_SECRET, 'change-me-refresh-with-at-least-32-chars'),
     refreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN ?? '7d',
   },
   mongo: {
@@ -43,13 +57,16 @@ export const configuration = (): AppConfiguration => ({
     forcePathStyle: toBoolean(process.env.S3_FORCE_PATH_STYLE, true),
   },
   cors: {
-    origins: parseOrigins(process.env.CORS_ORIGINS ?? '*'),
+    origins: productionOrigins(parseOrigins(process.env.CORS_ORIGINS ?? '*')),
   },
   rateLimit: {
     ttl: Number(process.env.RATE_LIMIT_TTL ?? 60000),
     max: Number(process.env.RATE_LIMIT_MAX ?? 100),
   },
   swagger: {
-    enabled: toBoolean(process.env.SWAGGER_ENABLED, true),
+    enabled: toBoolean(process.env.SWAGGER_ENABLED, process.env.NODE_ENV !== 'production'),
+  },
+  security: {
+    bodyLimit: process.env.REQUEST_BODY_LIMIT ?? '1mb',
   },
 });

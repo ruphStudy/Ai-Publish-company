@@ -1,0 +1,5 @@
+export type CircuitState = 'CLOSED' | 'OPEN' | 'HALF_OPEN';
+export type RecoveryStatus = 'PENDING' | 'RETRYING' | 'RECOVERING' | 'COMPENSATING' | 'SUCCEEDED' | 'FAILED' | 'EXHAUSTED' | 'MANUAL_REQUIRED' | 'CANCELLED';
+export interface ResiliencePolicy { key: string; displayName: string; description: string; category: string; requiredPermissions: string[]; fallback: { enabled: boolean; modes: string[] }; recovery: { automatic: boolean; manualApprovalRequired: boolean; checkpointEnabled: boolean; compensationEnabled: boolean }; }
+export interface RecoveryState { recoveryId: string; operationKey: string; policyKey: string; failureCategory: string; status: RecoveryStatus; providerKey: string | null; marketplaceKey: string | null; attemptCount: number; maxAttempts: number; errorCode: string | null; errorMessage: string | null; nextRetryAt: string | null; manualRequired: boolean; createdAt: string; }
+export interface CircuitStatus { circuitId: string; policyKey: string; isolationScope: string; isolationKey: string; state: CircuitState; failureCount: number; successCount: number; openedAt: string | null; lastErrorCode: string | null; }

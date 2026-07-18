@@ -1,0 +1,4 @@
+import type { Model } from 'mongoose';
+import type { PlagiarismDetection } from './entities/plagiarism-detection.entity';
+import { PlagiarismDetectionRepository } from './plagiarism-detection.repository';
+describe('PlagiarismDetectionRepository', () => { it('filters deleted records and paginates', async () => { const find = jest.fn().mockReturnValue({ sort: () => ({ skip: () => ({ limit: () => ({ exec: jest.fn().mockResolvedValue([]) }) }) }) }); const model = { find, countDocuments: jest.fn().mockReturnValue({ exec: jest.fn().mockResolvedValue(0) }) } as unknown as Model<PlagiarismDetection>; const result = await new PlagiarismDetectionRepository(model).paginate({ projectId: 'project' }, 1, 20); expect(find).toHaveBeenCalledWith({ projectId: 'project', isDeleted: false }); expect(result.total).toBe(0); }); });

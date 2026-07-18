@@ -1,4 +1,4 @@
-import { DataSourceProvider, MarketDataType } from '../entities/market-intelligence.entity';
+import type { DataSourceProvider, MarketDataType } from '../entities/market-intelligence.entity';
 
 export interface DataSourceParams {
   provider: DataSourceProvider;

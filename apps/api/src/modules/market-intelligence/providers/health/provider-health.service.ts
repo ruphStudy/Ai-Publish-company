@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
+import { HealthIndicatorResult} from '@nestjs/terminus';
+import { HealthIndicator, HealthCheckError } from '@nestjs/terminus';
 
 import { ProviderRegistryService } from '../registry/provider-registry.service';
-import { ProviderHealthResult, ProviderStatus } from '../interfaces/provider.interface';
+import { ProviderHealthResult} from '../interfaces/provider.interface';
+import { ProviderStatus } from '../interfaces/provider.interface';
+import { DataSourceProvider } from '../../entities/market-intelligence.entity';
 import { ProviderHealthSummaryResponseDto } from '../dto';
 
 @Injectable()
@@ -54,7 +57,7 @@ export class ProviderHealthService extends HealthIndicator {
     if (!provider) {
       return {
         key,
-        provider: 'unknown' as any,
+        provider: DataSourceProvider.MANUAL,
         version: 'unknown',
         isAvailable: false,
         status: ProviderStatus.INACTIVE,

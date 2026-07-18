@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -104,11 +105,10 @@ AIClassificationSchema.index({ confidenceScore: -1, isDeleted: 1 });
 AIClassificationSchema.index({ classifiedAt: -1, isDeleted: 1 });
 AIClassificationSchema.index({ classificationVersion: 1, isDeleted: 1 });
 
-AIClassificationSchema.pre(/^find/, function (next) {
-  const query = this as any;
+AIClassificationSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

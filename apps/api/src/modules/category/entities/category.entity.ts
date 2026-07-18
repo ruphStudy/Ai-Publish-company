@@ -1,3 +1,4 @@
+import type { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -9,6 +10,7 @@ export enum CategoryStatus {
 @Schema({ timestamps: true, collection: 'categories' })
 export class Category extends Document {
   @Prop({
+    type: String,
     required: true,
     trim: true,
     minlength: 2,
@@ -18,6 +20,7 @@ export class Category extends Document {
   name: string;
 
   @Prop({
+    type: String,
     required: true,
     unique: true,
     lowercase: true,
@@ -50,7 +53,7 @@ export class Category extends Document {
   @Prop({ type: String, default: null })
   color: string | null;
 
-  @Prop({ default: false, index: true })
+  @Prop({ type: Boolean, default: false, index: true })
   isDeleted: boolean;
 
   @Prop({ type: Date, default: null })
@@ -84,10 +87,9 @@ CategorySchema.index(
 );
 
 // ── Query middleware — auto-exclude soft-deleted documents ──────
-CategorySchema.pre(/^find/, function (next) {
-  const query = this as any;
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+CategorySchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
   next();
 });

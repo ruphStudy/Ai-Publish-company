@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { MonitoringExecutionQueryDto } from './dto';
+import type { MonitoringExecutionQueryDto } from './dto';
 import {
   MonitoringExecution,
 } from './entities/monitoring-execution.entity';

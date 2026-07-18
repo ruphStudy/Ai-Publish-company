@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { AIClassificationResponseDto } from './dto';
+import type { AIClassificationResponseDto } from './dto';
 import { AIClassification } from './entities/ai-classification.entity';
 import { ClassificationResult } from './models/classification-result.model';
 

@@ -2,8 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { Inject } from '@nestjs/common';
 
 import {
-  OPPORTUNITY_SCORING_CONFIG_TOKEN,
-  OpportunityScoringConfig,
+  OpportunityScoringConfig} from './config/opportunity-scoring.config';
+import {
+  OPPORTUNITY_SCORING_CONFIG_TOKEN
 } from './config/opportunity-scoring.config';
 import { OpportunityScoreFactory } from './opportunity-score.factory';
 import { OpportunityScoringValidator } from './opportunity-scoring.validator';

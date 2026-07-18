@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -86,11 +87,10 @@ OpportunityScoreSchema.index({ confidenceScore: -1, isDeleted: 1 });
 OpportunityScoreSchema.index({ scoredAt: -1, isDeleted: 1 });
 OpportunityScoreSchema.index({ scoreVersion: 1, isDeleted: 1 });
 
-OpportunityScoreSchema.pre(/^find/, function (next) {
-  const query = this as any;
+OpportunityScoreSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

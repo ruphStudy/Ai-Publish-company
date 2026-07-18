@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
+import { HealthIndicatorResult} from '@nestjs/terminus';
+import { HealthIndicator, HealthCheckError } from '@nestjs/terminus';
 import { InjectQueue } from '@nestjs/bullmq';
-import { Queue } from 'bullmq';
+import type { Queue } from 'bullmq';
 
 import { MARKET_INTELLIGENCE_QUEUE } from '../market-intelligence.constants';
 import { SchedulerRepository } from './scheduler.repository';

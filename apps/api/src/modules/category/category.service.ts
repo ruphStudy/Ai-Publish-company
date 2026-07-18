@@ -14,7 +14,8 @@ import {
   CategoryResponseDto,
   PaginatedCategoryResponseDto,
 } from './dto';
-import { Category, CategoryStatus } from './entities/category.entity';
+import { Category} from './entities/category.entity';
+import { CategoryStatus } from './entities/category.entity';
 
 @Injectable()
 export class CategoryService {

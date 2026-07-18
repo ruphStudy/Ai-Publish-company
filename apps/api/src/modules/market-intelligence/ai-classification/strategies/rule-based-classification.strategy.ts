@@ -1,18 +1,20 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  AI_CLASSIFICATION_CONFIG_TOKEN,
-  AIClassificationConfig,
+  AIClassificationConfig} from '../config/ai-classification.config';
+import {
+  AI_CLASSIFICATION_CONFIG_TOKEN
 } from '../config/ai-classification.config';
 import { ClassificationStrategy } from '../interfaces/classification-strategy.interface';
+import {
+  ClassificationContext,
+  ClassificationResult} from '../models/classification-result.model';
 import {
   ClassificationCompetitionLevel,
   ClassificationComplexity,
   ClassificationContentType,
-  ClassificationContext,
   ClassificationDemandLevel,
   ClassificationMarketMaturity,
-  ClassificationResult,
   ClassificationTopicType,
   ClassificationWritingStyle,
 } from '../models/classification-result.model';

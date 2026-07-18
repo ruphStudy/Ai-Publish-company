@@ -1,5 +1,5 @@
-import { DataSourceProvider, MarketDataType } from '../entities/market-intelligence.entity';
-import { RawDataResult } from './data-source.interface';
+import type { DataSourceProvider, MarketDataType } from '../entities/market-intelligence.entity';
+import type { RawDataResult } from './data-source.interface';
 
 export interface NormalizedData {
   title: string;

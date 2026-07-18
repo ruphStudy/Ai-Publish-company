@@ -92,7 +92,7 @@ export class SchedulerService {
       {
         ...dto,
         params: dto.params ?? definition?.defaultParams ?? {},
-        intervalMs: dto.intervalMs ?? definition?.defaultIntervalMs ?? null,
+        intervalMs: dto.intervalMs ?? definition?.defaultIntervalMs ?? undefined,
         isEnabled: dto.isEnabled ?? true,
         maxRetries: dto.maxRetries ?? definition?.defaultMaxRetries ?? 3,
         retryDelayMs: dto.retryDelayMs ?? 5000,
@@ -191,7 +191,7 @@ export class SchedulerService {
         maxRetries: job.maxRetries,
         timeoutMs: job.timeoutMs,
       },
-      { timeout: job.timeoutMs },
+      {},
     );
 
     await this.repository.updateExecution((execution._id as Types.ObjectId).toString(), {
@@ -248,7 +248,7 @@ export class SchedulerService {
         maxRetries: job.maxRetries,
         timeoutMs: job.timeoutMs,
       },
-      { delay: job.retryDelayMs, timeout: job.timeoutMs },
+      { delay: job.retryDelayMs },
     );
 
     await this.repository.updateExecution((newExecution._id as Types.ObjectId).toString(), {

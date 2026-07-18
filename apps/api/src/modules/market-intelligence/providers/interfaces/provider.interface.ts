@@ -1,5 +1,5 @@
-import { DataSourceProvider, MarketDataType } from '../../entities/market-intelligence.entity';
-import { DataSourceParams } from '../../interfaces/data-source.interface';
+import type { DataSourceProvider, MarketDataType } from '../../entities/market-intelligence.entity';
+import type { DataSourceParams } from '../../interfaces/data-source.interface';
 
 export enum ProviderStatus {
   ACTIVE = 'active',

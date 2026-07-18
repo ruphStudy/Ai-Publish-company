@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { AppPermission } from '@ai-publishing/shared';
 import { UserRole } from '../entities/user.entity';
 
 export class AuthResponseDto {
@@ -15,6 +16,7 @@ export class AuthResponseDto {
       firstName: 'John',
       lastName: 'Doe',
       roles: ['viewer'],
+      permissions: ['analytics:read'],
     },
   })
   user: {
@@ -23,5 +25,6 @@ export class AuthResponseDto {
     firstName: string;
     lastName: string;
     roles: UserRole[];
+    permissions: AppPermission[];
   };
 }

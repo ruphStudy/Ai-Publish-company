@@ -1,0 +1,64 @@
+import type { HydratedDocument } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { CanonicalFormat, CanonicalPaymentStatus, CanonicalRoyaltyType, NormalizationRecordStatus } from './sales-royalty-normalization.entity';
+
+export type CanonicalRoyaltyDocument = HydratedDocument<CanonicalRoyalty>;
+
+@Schema({ collection: 'canonical_royalty_records', timestamps: true, versionKey: 'version' })
+export class CanonicalRoyalty {
+  @Prop({ required: true, unique: true, index: true }) canonicalRoyaltyId: string;
+  @Prop({ required: true, index: true }) projectId: string;
+  @Prop({ type: String, default: null, index: true }) bookId: string | null;
+  @Prop({ type: String, default: null, index: true }) editionId: string | null;
+  @Prop({ required: true, index: true }) providerKey: string;
+  @Prop({ type: String, default: null, index: true }) providerAccountId: string | null;
+  @Prop({ required: true, index: true }) marketplaceId: string;
+  @Prop({ required: true, index: true }) countryCode: string;
+  @Prop({ type: String, default: null, index: true }) territoryCode: string | null;
+  @Prop({ required: true, index: true }) currencyCode: string;
+  @Prop({ required: true }) paymentCurrencyCode: string;
+  @Prop({ required: true }) timezone: string;
+  @Prop({ type: Date, required: true, index: true }) royaltyPeriodStart: Date;
+  @Prop({ type: Date, required: true, index: true }) royaltyPeriodEnd: Date;
+  @Prop({ type: Date, required: true, index: true }) reportingDate: Date;
+  @Prop({ type: Date, default: null, index: true }) paymentDate: Date | null;
+  @Prop({ type: String, enum: CanonicalRoyaltyType, required: true, index: true }) royaltyType: CanonicalRoyaltyType;
+  @Prop({ type: String, enum: CanonicalPaymentStatus, required: true, index: true }) paymentStatus: CanonicalPaymentStatus;
+  @Prop({ required: true }) estimated: boolean;
+  @Prop({ required: true }) finalized: boolean;
+  @Prop({ default: false }) adjustment: boolean;
+  @Prop({ default: false }) correction: boolean;
+  @Prop({ type: String, enum: CanonicalFormat, required: true, index: true }) format: CanonicalFormat;
+  @Prop({ default: 0, min: 0 }) unitsSold: number;
+  @Prop({ default: '0' }) grossRevenue: string;
+  @Prop({ default: '0' }) eligibleRevenue: string;
+  @Prop({ default: '0' }) royaltyRate: string;
+  @Prop({ required: true }) royaltyAmount: string;
+  @Prop({ default: '0' }) taxAmount: string;
+  @Prop({ default: '0' }) withholdingTax: string;
+  @Prop({ default: '0' }) feesAmount: string;
+  @Prop({ default: '0' }) adjustmentAmount: string;
+  @Prop({ required: true }) paymentAmount: string;
+  @Prop({ type: String, default: null }) exchangeRate: string | null;
+  @Prop({ type: String, default: null }) baseCurrencyCode: string | null;
+  @Prop({ type: String, default: null }) baseCurrencyRoyaltyAmount: string | null;
+  @Prop({ type: String, default: null }) baseCurrencyPaymentAmount: string | null;
+  @Prop({ type: String, default: null, index: true }) providerTransactionId: string | null;
+  @Prop({ type: String, default: null, index: true }) externalReference: string | null;
+  @Prop({ required: true, index: true }) sourceImportId: string;
+  @Prop({ required: true, index: true }) sourceRecordId: string;
+  @Prop({ required: true, index: true }) sourceFingerprint: string;
+  @Prop({ required: true, index: true }) canonicalFingerprint: string;
+  @Prop({ required: true, index: true }) mappingProfileId: string;
+  @Prop({ required: true, index: true }) mappingProfileVersion: string;
+  @Prop({ type: Date, required: true }) normalizedAt: Date;
+  @Prop({ type: String, enum: NormalizationRecordStatus, required: true }) normalizationStatus: NormalizationRecordStatus;
+  @Prop({ type: Object, default: {} }) metadata: Record<string, unknown>;
+  @Prop({ type: Object, default: {} }) lineage: Record<string, unknown>;
+  @Prop({ type: String, default: null }) createdBy: string | null;
+  @Prop({ type: String, default: null }) updatedBy: string | null;
+}
+export const CanonicalRoyaltySchema = SchemaFactory.createForClass(CanonicalRoyalty);
+CanonicalRoyaltySchema.index({ projectId: 1, royaltyPeriodStart: -1 });
+CanonicalRoyaltySchema.index({ bookId: 1, editionId: 1, paymentDate: -1 });
+CanonicalRoyaltySchema.index({ providerKey: 1, canonicalFingerprint: 1 }, { unique: true });

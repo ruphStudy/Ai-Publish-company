@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { AIClassificationQueryDto } from './dto';
+import type { AIClassificationQueryDto } from './dto';
 import { AIClassification } from './entities/ai-classification.entity';
 import {
   AIClassificationAuditContext,

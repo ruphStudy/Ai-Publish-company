@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { OpportunityScoreQueryDto } from '../dto';
-import { OpportunityScore } from '../entities/opportunity-score.entity';
-import { OpportunityScoreResult } from '../models/opportunity-score.model';
+import type { OpportunityScoreQueryDto } from '../dto';
+import type { OpportunityScore } from '../entities/opportunity-score.entity';
+import type { OpportunityScoreResult } from '../models/opportunity-score.model';
 
 export interface OpportunityScoringAuditContext {
   createdBy?: Types.ObjectId;

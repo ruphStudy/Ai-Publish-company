@@ -55,16 +55,16 @@ export class AuditLog extends Document {
   userAgent: string;
 
   @Prop({ type: MongooseSchema.Types.Mixed })
-  changes: Record<string, any>;
+  changes: Record<string, unknown>;
 
   @Prop({ type: MongooseSchema.Types.Mixed })
-  previousValues: Record<string, any>;
+  previousValues: Record<string, unknown>;
 
   @Prop({ type: MongooseSchema.Types.Mixed })
-  newValues: Record<string, any>;
+  newValues: Record<string, unknown>;
 
   @Prop({ type: MongooseSchema.Types.Mixed })
-  metadata: Record<string, any>;
+  metadata: Record<string, unknown>;
 
   @Prop({ type: String, trim: true, maxlength: 500 })
   description: string;

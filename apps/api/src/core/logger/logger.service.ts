@@ -1,37 +1,39 @@
-import { Injectable, LoggerService as NestLoggerService } from '@nestjs/common';
+import type { LoggerService as NestLoggerService } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
+import { redactSensitive, safeErrorStack } from '../security/security-redaction';
 
 @Injectable()
 export class AppLoggerService implements NestLoggerService {
   constructor(private readonly logger: PinoLogger) {}
 
-  log(message: any, context?: string): void {
-    this.logger.info({ context }, message);
+  log(message: unknown, context?: string): void {
+    this.logger.info({ context, message: redactSensitive(message) });
   }
 
-  error(message: any, trace?: string, context?: string): void {
-    this.logger.error({ context, trace }, message);
+  error(message: unknown, trace?: string, context?: string): void {
+    this.logger.error({ context, trace: process.env.NODE_ENV === 'production' ? undefined : trace, message: redactSensitive(message) });
   }
 
-  warn(message: any, context?: string): void {
-    this.logger.warn({ context }, message);
+  warn(message: unknown, context?: string): void {
+    this.logger.warn({ context, message: redactSensitive(message) });
   }
 
-  debug(message: any, context?: string): void {
-    this.logger.debug({ context }, message);
+  debug(message: unknown, context?: string): void {
+    this.logger.debug({ context, message });
   }
 
-  verbose(message: any, context?: string): void {
-    this.logger.trace({ context }, message);
+  verbose(message: unknown, context?: string): void {
+    this.logger.trace({ context, message });
   }
 
-  logRequest(method: string, url: string, correlationId: string, data?: any): void {
+  logRequest(method: string, url: string, correlationId: string, data: Record<string, unknown> = {}): void {
     this.logger.info({
       type: 'request',
       method,
       url,
       correlationId,
-      ...data,
+      ...redactSensitive(data),
     });
   }
 
@@ -46,13 +48,13 @@ export class AppLoggerService implements NestLoggerService {
     });
   }
 
-  logError(error: Error, correlationId?: string, context?: any): void {
+  logError(error: Error, correlationId?: string, context: Record<string, unknown> = {}): void {
     this.logger.error({
       type: 'error',
       message: error.message,
-      stack: error.stack,
+      stack: safeErrorStack(error),
       correlationId,
-      ...context,
+      ...redactSensitive(context),
     });
   }
 }

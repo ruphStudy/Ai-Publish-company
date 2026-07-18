@@ -1,0 +1,51 @@
+- Completed workflows
+  - Login route is implemented at `/auth/login` and calls existing `/auth/login`.
+  - Protected app routes redirect unauthenticated users to `/auth/login` and preserve intended route state.
+  - Current-user loading uses existing `/auth/me`.
+  - Header displays authenticated user name, email, role and initials from `/auth/me`.
+  - Logout calls existing `/auth/logout`, clears local tokens and returns to `/auth/login`.
+  - Books/projects route is implemented at `/projects` and `/books` using existing `/book-projects`.
+  - Project creation uses existing `/book-projects` with category assignment from `/categories`.
+  - Project detail route is implemented at `/projects/:id` and `/books/:id`.
+  - Workflow resume routes are implemented at `/generation/:id`, `/production/:id`, `/publishing/:id` and `/export/:id`.
+  - Project detail exposes the launch workflow sequence: overview, generation, production, publishing and export.
+  - Export history is connected to existing `/exports/project/:projectId`.
+  - Analytics overview route `/analytics/overview` now opens the connected executive dashboard.
+  - Header notifications remain connected to existing Notification Engine APIs.
+  - Safe Not Found UI is implemented for unmatched authenticated routes.
+
+- Remaining verified blockers
+  - Generation start cannot be completed from the UI because blueprint generation requires existing Market Intelligence and Knowledge record selection, and no launch-ready selector workflow is present in the frontend.
+  - Export start is disabled because existing export creation requires blueprint, metadata, table-of-contents and cover-prompt IDs; the UI does not yet provide a complete prerequisite selection flow.
+  - Production checks are visible as project-context stages, but stage-specific start actions remain blocked until a completed manuscript target selector is available.
+  - Publishing submission is not executable from the project detail UI because provider/marketplace credential readiness and submission payload review are not fully represented in a launch-ready frontend workflow.
+
+- Remaining non-blocking launch risks
+  - Project detail uses one consolidated workflow page instead of dedicated detail pages for every generation, production and publishing artifact.
+  - Royalty remains merged into financial analytics; duplicate royalty dashboard navigation was removed.
+  - Dashboard saved views are still implemented by existing dashboard local persistence and were not migrated to Settings Engine in this pass.
+  - Sales, revenue and royalty dashboard aggregates still depend on the repository’s available financial ingestion records; zero values remain valid only when no underlying records exist.
+
+- Routes verified
+  - `/auth/login`
+  - `/dashboard`
+  - `/projects`
+  - `/projects/:id`
+  - `/books`
+  - `/books/:id`
+  - `/generation/:id`
+  - `/production/:id`
+  - `/publishing/:id`
+  - `/export/:id`
+  - `/analytics/overview`
+  - `/analytics/executive`
+  - `/analytics/sales`
+  - `/analytics/revenue`
+  - `/analytics/opportunities`
+  - `/analytics/ai-insights`
+  - `/operations/jobs`
+  - `/operations/resilience`
+  - `/settings`
+
+- Build result
+  - `pnpm build` passed.

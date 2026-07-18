@@ -10,6 +10,9 @@ coverage/
 .turbo/
 .pnpm-store/
 .vite/
+*.tsbuildinfo
+apps/web/vite.config.js
+apps/web/vite.config.d.ts
 logs/
 *.log
 npm-debug.log*

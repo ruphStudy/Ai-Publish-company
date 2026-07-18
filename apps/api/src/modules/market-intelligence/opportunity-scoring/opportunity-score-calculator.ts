@@ -1,22 +1,25 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  AI_CLASSIFICATION_CONFIG_TOKEN,
-  AIClassificationConfig,
+  AIClassificationConfig} from '../ai-classification/config/ai-classification.config';
+import {
+  AI_CLASSIFICATION_CONFIG_TOKEN
 } from '../ai-classification/config/ai-classification.config';
 import {
   ClassificationCompetitionLevel,
   ClassificationDemandLevel,
 } from '../ai-classification/models/classification-result.model';
 import {
-  OPPORTUNITY_SCORING_CONFIG_TOKEN,
-  OpportunityScoringConfig,
+  OpportunityScoringConfig} from './config/opportunity-scoring.config';
+import {
+  OPPORTUNITY_SCORING_CONFIG_TOKEN
 } from './config/opportunity-scoring.config';
 import {
-  OpportunityGrade,
-  OpportunityRecommendation,
   OpportunityScoreResult,
-  OpportunityScoringContext,
+  OpportunityScoringContext} from './models/opportunity-score.model';
+import {
+  OpportunityGrade,
+  OpportunityRecommendation
 } from './models/opportunity-score.model';
 
 @Injectable()

@@ -9,7 +9,8 @@ import {
   ProviderResponse,
 } from '../interfaces/provider.interface';
 import {
-  GoogleTrendsProviderConfig,
+  GoogleTrendsProviderConfig} from './config/google-trends-provider.config';
+import {
   isGoogleTrendsConfigValid,
 } from './config/google-trends-provider.config';
 import {

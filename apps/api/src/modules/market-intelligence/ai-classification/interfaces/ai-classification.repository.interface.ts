@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { AIClassificationQueryDto } from '../dto/ai-classification-query.dto';
-import { AIClassification } from '../entities/ai-classification.entity';
-import { ClassificationResult } from '../models/classification-result.model';
+import type { AIClassificationQueryDto } from '../dto/ai-classification-query.dto';
+import type { AIClassification } from '../entities/ai-classification.entity';
+import type { ClassificationResult } from '../models/classification-result.model';
 
 export interface AIClassificationAuditContext {
   createdBy?: Types.ObjectId;

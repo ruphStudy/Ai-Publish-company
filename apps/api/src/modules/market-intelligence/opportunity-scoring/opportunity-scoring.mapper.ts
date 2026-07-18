@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { OpportunityScoreResponseDto } from './dto';
+import type { OpportunityScoreResponseDto } from './dto';
 import { OpportunityScore } from './entities/opportunity-score.entity';
 import { OpportunityScoreResult } from './models/opportunity-score.model';
 

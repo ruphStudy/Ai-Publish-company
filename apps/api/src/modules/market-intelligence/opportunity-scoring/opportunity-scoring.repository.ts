@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { OpportunityScoreQueryDto } from './dto';
+import type { OpportunityScoreQueryDto } from './dto';
 import { OpportunityScore } from './entities/opportunity-score.entity';
 import {
   OpportunityScoringAuditContext,

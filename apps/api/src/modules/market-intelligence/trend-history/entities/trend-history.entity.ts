@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
@@ -83,11 +84,10 @@ TrendHistorySchema.index(
   { unique: true, name: 'idx_trend_history_snapshot_unique' },
 );
 
-TrendHistorySchema.pre(/^find/, function (next) {
-  const query = this as any;
+TrendHistorySchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

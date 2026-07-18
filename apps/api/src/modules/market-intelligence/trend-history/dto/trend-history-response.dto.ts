@@ -1,5 +1,5 @@
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import {
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type {
   HistoricalStatisticsResult,
   TrendComparisonResult,
   TrendSnapshotClassification,

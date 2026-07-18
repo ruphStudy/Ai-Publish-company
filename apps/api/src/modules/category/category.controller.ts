@@ -22,9 +22,10 @@ import {
 
 import { CategoryService } from './category.service';
 import {
+  CategoryQueryDto} from './dto';
+import {
   CreateCategoryDto,
   UpdateCategoryDto,
-  CategoryQueryDto,
   CategoryResponseDto,
   PaginatedCategoryResponseDto,
 } from './dto';
@@ -33,7 +34,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { UserRole } from '../auth/entities/user.entity';
-import type { User } from '../auth/entities/user.entity';
+import { User } from '../auth/entities/user.entity';
 
 @ApiTags('categories')
 @Controller('categories')

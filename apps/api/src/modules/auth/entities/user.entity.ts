@@ -1,3 +1,4 @@
+import type { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -9,28 +10,28 @@ export enum UserRole {
 
 @Schema({ timestamps: true, collection: 'users' })
 export class User extends Document {
-  @Prop({ required: true, unique: true, lowercase: true, trim: true })
+  @Prop({ type: String, required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ type: String, required: true, select: false })
   password: string;
 
-  @Prop({ required: true, trim: true, minlength: 2, maxlength: 50 })
+  @Prop({ type: String, required: true, trim: true, minlength: 2, maxlength: 50 })
   firstName: string;
 
-  @Prop({ required: true, trim: true, minlength: 2, maxlength: 50 })
+  @Prop({ type: String, required: true, trim: true, minlength: 2, maxlength: 50 })
   lastName: string;
 
   @Prop({ type: [String], enum: UserRole, default: [UserRole.VIEWER] })
   roles: UserRole[];
 
-  @Prop({ default: true, index: true })
+  @Prop({ type: Boolean, default: true, index: true })
   isActive: boolean;
 
   @Prop({ type: String, default: null, select: false })
   refreshToken: string | null;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   isDeleted: boolean;
 
   @Prop({ type: Date, default: null })
@@ -58,10 +59,9 @@ UserSchema.index({ createdAt: -1 });
 UserSchema.index({ roles: 1 });
 
 // Query middleware to exclude soft-deleted documents by default
-UserSchema.pre(/^find/, function (next) {
-  const query = this as any;
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+UserSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
   next();
 });

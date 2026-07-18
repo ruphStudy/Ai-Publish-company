@@ -1,3 +1,4 @@
+import type { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
@@ -39,10 +40,10 @@ export class BookProject extends Document {
   @Prop({ required: true, trim: true, minlength: 2, maxlength: 300, index: true })
   title: string;
 
-  @Prop({ trim: true, maxlength: 500, default: null })
+  @Prop({ type: String, trim: true, maxlength: 500, default: null })
   subtitle: string | null;
 
-  @Prop({ trim: true, maxlength: 5000, default: null })
+  @Prop({ type: String, trim: true, maxlength: 5000, default: null })
   description: string | null;
 
   @Prop({ type: Types.ObjectId, ref: 'Category', required: true, index: true })
@@ -51,10 +52,10 @@ export class BookProject extends Document {
   @Prop({ type: Types.ObjectId, ref: 'Subcategory', default: null, index: true })
   subCategoryId: Types.ObjectId | null;
 
-  @Prop({ trim: true, maxlength: 300, default: null, index: true })
+  @Prop({ type: String, trim: true, maxlength: 300, default: null, index: true })
   niche: string | null;
 
-  @Prop({ trim: true, maxlength: 500, default: null })
+  @Prop({ type: String, trim: true, maxlength: 500, default: null })
   microNiche: string | null;
 
   @Prop({ required: true, trim: true, minlength: 2, maxlength: 10, index: true })
@@ -63,16 +64,16 @@ export class BookProject extends Document {
   @Prop({ required: true, trim: true, maxlength: 100, index: true })
   targetMarket: string;
 
-  @Prop({ trim: true, maxlength: 500, default: null })
+  @Prop({ type: String, trim: true, maxlength: 500, default: null })
   targetAudience: string | null;
 
-  @Prop({ trim: true, maxlength: 100, default: null })
+  @Prop({ type: String, trim: true, maxlength: 100, default: null })
   writingStyle: string | null;
 
-  @Prop({ trim: true, maxlength: 100, default: null })
+  @Prop({ type: String, trim: true, maxlength: 100, default: null })
   tone: string | null;
 
-  @Prop({ trim: true, maxlength: 1000, default: null })
+  @Prop({ type: String, trim: true, maxlength: 1000, default: null })
   objective: string | null;
 
   @Prop({ type: Number, default: null, min: 1 })
@@ -84,7 +85,7 @@ export class BookProject extends Document {
   @Prop({ type: [String], default: [] })
   targetPlatforms: string[];
 
-  @Prop({ trim: true, maxlength: 200, default: null })
+  @Prop({ type: String, trim: true, maxlength: 200, default: null })
   aiModel: string | null;
 
   @Prop({
@@ -162,11 +163,10 @@ BookProjectSchema.index(
   { name: 'idx_book_projects_text_search' },
 );
 
-BookProjectSchema.pre(/^find/, function (next) {
-  const query = this as any;
+BookProjectSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

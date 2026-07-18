@@ -5,7 +5,12 @@ export interface HealthResponse {
   version: string;
   uptime: number;
   timestamp: string;
-  checks?: Record<string, any>;
+  checks?: Record<string, HealthCheck>;
+}
+
+export interface HealthCheck {
+  status: string;
+  [key: string]: unknown;
 }
 
 @Injectable()
@@ -27,12 +32,12 @@ export class HealthService {
     };
   }
 
-  buildHealthResponse(checks?: Record<string, any>): HealthResponse {
+  buildHealthResponse(checks?: Record<string, HealthCheck>): HealthResponse {
     const base = this.getBaseHealth();
     
     if (checks) {
       const hasError = Object.values(checks).some(
-        (check: any) => check.status !== 'up'
+        (check) => check.status !== 'up'
       );
       
       return {

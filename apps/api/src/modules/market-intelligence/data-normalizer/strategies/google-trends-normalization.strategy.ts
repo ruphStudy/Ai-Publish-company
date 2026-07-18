@@ -8,7 +8,8 @@ import {
 } from '../../providers/google-trends/interfaces/google-trends.interface';
 import { ProviderNormalizationStrategy } from '../interfaces/provider-normalization-strategy.interface';
 import {
-  UnifiedMarketIntelligenceModel,
+  UnifiedMarketIntelligenceModel} from '../models/unified-market-intelligence.model';
+import {
   UnifiedTrendDirection,
 } from '../models/unified-market-intelligence.model';
 

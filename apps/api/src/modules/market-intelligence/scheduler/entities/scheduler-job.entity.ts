@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema, Types } from 'mongoose';
 
@@ -83,10 +84,9 @@ SchedulerJobSchema.index({ isEnabled: 1, isDeleted: 1 });
 SchedulerJobSchema.index({ lastExecutedAt: -1 });
 SchedulerJobSchema.index({ consecutiveFailures: -1 });
 
-SchedulerJobSchema.pre(/^find/, function (next) {
-  const query = this as any;
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+SchedulerJobSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
   next();
 });

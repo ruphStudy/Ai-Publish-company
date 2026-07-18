@@ -1,3 +1,4 @@
+import type { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -100,10 +101,9 @@ BookSchema.index(
   { name: 'idx_books_text_search' },
 );
 
-BookSchema.pre(/^find/, function (next) {
-  const query = this as any;
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+BookSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
   next();
 });

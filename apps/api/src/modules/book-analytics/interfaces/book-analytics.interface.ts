@@ -1,0 +1,7 @@
+import type { AnalyticsGranularity, AnalyticsPeriod, AnalyticsScope } from '../entities/book-analytics.entity';
+
+export interface AnalyticsPeriodRange { periodType: AnalyticsPeriod; periodStart: Date; periodEnd: Date; comparisonPeriodStart: Date | null; comparisonPeriodEnd: Date | null }
+export interface AnalyticsMetricValues { unitsSold: number; grossSales: number; netSales: number; refunds: number; refundAmount: number; transactionCount: number; estimatedRoyalty: number; finalizedRoyalty: number; paidRoyalty: number; pendingRoyalty: number; withheldRoyalty: number; royaltyPaymentAmount: number; averageSellingPrice: number | null; averageRoyaltyPerUnit: number | null; effectiveRoyaltyRate: number | null }
+export interface AnalyticsComparisonValue { currentValue: number; previousValue: number | null; absoluteChange: number | null; percentageChange: number | null; trendDirection: 'UP' | 'DOWN' | 'FLAT' | 'UNKNOWN'; comparable: boolean; comparisonReason?: string }
+export interface AnalyticsTrendPoint { periodStart: Date; periodEnd: Date; metricKey: string; value: number; previousValue: number | null; absoluteChange: number | null; percentageChange: number | null; dataCompleteness: number; currencyCode?: string | null }
+export interface AnalyticsRequest { scope: AnalyticsScope; entityId?: string | null; projectId?: string | null; period: AnalyticsPeriod; from?: Date; to?: Date; comparison?: boolean; reportingCurrency?: string; granularity?: AnalyticsGranularity }

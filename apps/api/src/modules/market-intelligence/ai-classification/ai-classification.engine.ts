@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 
 import { MarketKnowledgeResponseDto } from '../knowledge-database/dto';
 import {
-  AI_CLASSIFICATION_CONFIG_TOKEN,
-  AIClassificationConfig,
+  AIClassificationConfig} from './config/ai-classification.config';
+import {
+  AI_CLASSIFICATION_CONFIG_TOKEN
 } from './config/ai-classification.config';
 import { ClassificationPipeline } from './classification.pipeline';
 import { ClassificationResult } from './models/classification-result.model';

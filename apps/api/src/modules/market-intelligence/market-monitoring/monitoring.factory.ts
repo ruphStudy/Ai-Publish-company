@@ -7,10 +7,11 @@ import {
   UpdateMonitoringExecutionData,
 } from './interfaces/monitoring-job.repository.interface';
 import {
-  MonitoringExecutionStatus,
   MonitoringExecutionType,
   MonitoringJobDefinition,
-  MonitoringRunMetrics,
+  MonitoringRunMetrics} from './models/monitoring.model';
+import {
+  MonitoringExecutionStatus
 } from './models/monitoring.model';
 
 @Injectable()

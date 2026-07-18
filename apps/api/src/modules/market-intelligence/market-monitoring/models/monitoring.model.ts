@@ -1,6 +1,6 @@
-import { DataSourceParams } from '../../interfaces/data-source.interface';
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import { ProviderConfig } from '../../providers/interfaces/provider.interface';
+import type { DataSourceParams } from '../../interfaces/data-source.interface';
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type { ProviderConfig } from '../../providers/interfaces/provider.interface';
 
 export enum MonitoringExecutionStatus {
   PENDING = 'pending',

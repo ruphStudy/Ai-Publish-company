@@ -9,9 +9,10 @@ import { MonitoringFactory } from './monitoring.factory';
 import { MonitoringJobRepository } from './monitoring-job.repository';
 import { MonitoringJobRunner } from './monitoring-job-runner';
 import {
-  MonitoringExecutionStatus,
   MonitoringExecutionType,
-  MonitoringJobDefinition,
+  MonitoringJobDefinition} from './models/monitoring.model';
+import {
+  MonitoringExecutionStatus
 } from './models/monitoring.model';
 
 @Injectable()

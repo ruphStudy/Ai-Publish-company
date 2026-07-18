@@ -7,10 +7,7 @@ import {
   NormalizedMarketData,
 } from '../../providers/amazon/interfaces/amazon.interface';
 import { ProviderNormalizationStrategy } from '../interfaces/provider-normalization-strategy.interface';
-import {
-  UnifiedMarketIntelligenceModel,
-  UnifiedTrendDirection,
-} from '../models/unified-market-intelligence.model';
+import { UnifiedMarketIntelligenceModel } from '../models/unified-market-intelligence.model';
 
 @Injectable()
 export class AmazonNormalizationStrategy implements ProviderNormalizationStrategy {

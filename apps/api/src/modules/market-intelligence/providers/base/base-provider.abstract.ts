@@ -1,15 +1,16 @@
-import { DataSourceProvider, MarketDataType } from '../../entities/market-intelligence.entity';
-import { DataSourceParams } from '../../interfaces/data-source.interface';
-import {
+import type { DataSourceProvider, MarketDataType } from '../../entities/market-intelligence.entity';
+import type { DataSourceParams } from '../../interfaces/data-source.interface';
+import type {
   IProvider,
   ProviderConfig,
   ProviderResponse,
   ProviderHealthResult,
   ProviderError,
-  ProviderErrorCode,
-  ProviderStatus,
   ProviderCapability,
-  ValidationResult,
+  ValidationResult} from '../interfaces/provider.interface';
+import {
+  ProviderErrorCode,
+  ProviderStatus
 } from '../interfaces/provider.interface';
 
 export abstract class BaseProvider implements IProvider {
@@ -182,7 +183,7 @@ export abstract class BaseProvider implements IProvider {
 
   private normalizeError(error: unknown): ProviderError {
     if (error instanceof Error) {
-      const code = (error as any).code;
+      const code = (error as Error & { code?: ProviderErrorCode }).code;
       const isTimeout = code === ProviderErrorCode.TIMEOUT;
       const isRateLimit = code === ProviderErrorCode.RATE_LIMITED;
 

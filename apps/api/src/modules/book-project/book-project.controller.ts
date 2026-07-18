@@ -22,11 +22,13 @@ import {
 
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { User, UserRole } from '../auth/entities/user.entity';
+import { User} from '../auth/entities/user.entity';
+import { UserRole } from '../auth/entities/user.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import {
-  BookProjectQueryDto,
+  BookProjectQueryDto} from './dto';
+import {
   BookProjectResponseDto,
   CreateBookProjectDto,
   PaginatedBookProjectResponseDto,

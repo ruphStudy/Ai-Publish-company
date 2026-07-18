@@ -2,6 +2,8 @@
 
 Enterprise monorepo for the AI Publishing platform.
 
+The repository includes the stabilized publishing pipeline from project and blueprint creation through outline, chapter and manuscript generation, metadata, cover prompts, table of contents, and multi-format export. Cross-feature coordination lives in the publishing workflow orchestrator, while AI transport is shared under `apps/api/src/core/ai`.
+
 ## Architecture
 
 - **Monorepo**: pnpm workspaces with Turbo for build orchestration
@@ -32,6 +34,10 @@ ai-publishing-company/
 - Node.js >= 20.11.0
 - pnpm >= 9.0.0
 - Docker & Docker Compose
+
+## Quality gates
+
+Run `pnpm build`, `pnpm typecheck`, `pnpm lint`, and `pnpm test` before merging. API tests use a deterministic mock AI provider and do not call OpenAI.
 
 ## Quick Start
 

@@ -1,10 +1,10 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { MonitoringExecutionQueryDto } from '../dto';
-import {
+import type { MonitoringExecutionQueryDto } from '../dto';
+import type {
   MonitoringExecution,
 } from '../entities/monitoring-execution.entity';
-import {
+import type {
   MonitoringExecutionStatus,
   MonitoringExecutionType,
 } from '../models/monitoring.model';

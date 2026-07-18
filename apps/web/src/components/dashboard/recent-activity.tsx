@@ -79,7 +79,6 @@ export function RecentActivity({
           <ol className="space-y-3" aria-label="Activity feed">
             {displayItems.map((item, index) => {
               const config = typeConfig[item.type];
-              const Icon = item.icon;
               const isLast = index === displayItems.length - 1;
 
               return (

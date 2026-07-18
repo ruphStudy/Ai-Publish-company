@@ -12,6 +12,7 @@ import {
 } from './dto';
 import { MonitoringConfigurationService } from './config/monitoring.configuration.service';
 import { MonitoringExecutionEngine } from './monitoring-execution.engine';
+import { MonitoringExecution } from './entities/monitoring-execution.entity';
 import { MonitoringFactory } from './monitoring.factory';
 import { MonitoringJobRepository } from './monitoring-job.repository';
 import { MonitoringValidator } from './monitoring.validator';
@@ -173,7 +174,7 @@ export class MarketMonitoringService {
     return this.toResponse(execution);
   }
 
-  private toResponse(execution: any): MonitoringExecutionResponseDto {
+  private toResponse(execution: MonitoringExecution): MonitoringExecutionResponseDto {
     return {
       id: (execution._id as Types.ObjectId).toString(),
       executionId: execution.executionId,

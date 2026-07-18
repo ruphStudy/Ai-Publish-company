@@ -1,13 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
 import {
-  LayoutDashboard,
-  Brain,
-  FolderTree,
-  BookOpen,
-  Factory,
-  Send,
-  BarChart3,
-  Settings,
   ChevronLeft,
   Sparkles,
 } from 'lucide-react';
@@ -15,42 +7,19 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { appRoutes } from '@/app/routes';
+import { useDashboardPermissions } from '@/features/analytics-dashboard/hooks/use-dashboard-permissions';
+import { hasPermissions } from '@/features/analytics-dashboard/lib/permissions';
 
 interface SidebarProps {
   collapsed: boolean;
   onToggle: () => void;
 }
 
-const navItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', href: '/dashboard' },
-  {
-    icon: Brain,
-    label: 'Knowledge Intelligence',
-    href: '/knowledge',
-    children: [
-      { label: 'Categories', href: '/categories' },
-      { label: 'Research', href: '/research' },
-      { label: 'Market Intelligence', href: '/market-intelligence' },
-    ],
-  },
-  { icon: BookOpen, label: 'Books', href: '/books' },
-  {
-    icon: Factory,
-    label: 'Book Production',
-    href: '/production',
-    children: [
-      { label: 'Generator', href: '/generator' },
-      { label: 'Pipeline', href: '/pipeline' },
-      { label: 'Templates', href: '/templates' },
-    ],
-  },
-  { icon: Send, label: 'Publishing', href: '/publishing' },
-  { icon: BarChart3, label: 'Reports', href: '/reports' },
-  { icon: Settings, label: 'Settings', href: '/settings' },
-];
-
 export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const location = useLocation();
+  const permissions = useDashboardPermissions();
+  const navItems = appRoutes.filter((item) => item.launchVisible && hasPermissions(item.permissions, permissions));
 
   return (
     <div
@@ -81,30 +50,30 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
       <ScrollArea className="flex-1 px-3 py-4">
         <nav className="space-y-1">
           {navItems.map((item) => (
-            <div key={item.href}>
-              <Link to={item.href}>
+            <div key={item.path}>
+              <Link to={item.path}>
                 <Button
                   variant="ghost"
                   className={cn(
                     'w-full justify-start text-slate-400 hover:bg-slate-800 hover:text-slate-100',
-                    location.pathname === item.href && 'bg-slate-800 text-slate-100',
+                    location.pathname === item.path && 'bg-slate-800 text-slate-100',
                     collapsed && 'justify-center px-2'
                   )}
                 >
-                  <item.icon className="h-5 w-5" />
+                  {item.icon && <item.icon className="h-5 w-5" />}
                   {!collapsed && <span className="ml-3">{item.label}</span>}
                 </Button>
               </Link>
               {!collapsed && item.children && (
                 <div className="ml-4 mt-1 space-y-1 border-l border-slate-800 pl-4">
-                  {item.children.map((child) => (
-                    <Link key={child.href} to={child.href}>
+                  {item.children.filter((child) => child.launchVisible && hasPermissions(child.permissions, permissions)).map((child) => (
+                    <Link key={child.path} to={child.path}>
                       <Button
                         variant="ghost"
                         size="sm"
                         className={cn(
                           'w-full justify-start text-slate-500 hover:text-slate-300',
-                          location.pathname === child.href && 'text-slate-100'
+                          location.pathname === child.path && 'text-slate-100'
                         )}
                       >
                         {child.label}

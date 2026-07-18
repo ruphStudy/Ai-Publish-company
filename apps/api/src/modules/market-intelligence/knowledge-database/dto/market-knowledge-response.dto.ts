@@ -1,5 +1,5 @@
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import { UnifiedTrendDirection } from '../../data-normalizer/models/unified-market-intelligence.model';
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type { UnifiedTrendDirection } from '../../data-normalizer/models/unified-market-intelligence.model';
 
 export class MarketKnowledgeResponseDto {
   id: string;

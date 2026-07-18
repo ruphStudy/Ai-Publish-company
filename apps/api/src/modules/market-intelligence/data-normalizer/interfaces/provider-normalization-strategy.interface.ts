@@ -1,6 +1,6 @@
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import { ProviderResponse } from '../../providers/interfaces/provider.interface';
-import { UnifiedMarketIntelligenceModel } from '../models/unified-market-intelligence.model';
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type { ProviderResponse } from '../../providers/interfaces/provider.interface';
+import type { UnifiedMarketIntelligenceModel } from '../models/unified-market-intelligence.model';
 
 export const PROVIDER_NORMALIZATION_STRATEGIES_TOKEN = 'PROVIDER_NORMALIZATION_STRATEGIES';
 

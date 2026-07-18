@@ -2,8 +2,9 @@ import { randomUUID } from 'crypto';
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  BOOK_PROJECT_CONFIG_TOKEN,
-  BookProjectConfig,
+  BookProjectConfig} from './config/book-project.config';
+import {
+  BOOK_PROJECT_CONFIG_TOKEN
 } from './config/book-project.config';
 
 @Injectable()

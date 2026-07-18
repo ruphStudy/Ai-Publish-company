@@ -1,0 +1,13 @@
+import { Injectable } from '@nestjs/common';
+import { GooglePlayBooksChecklistStatus } from './entities/google-play-books.entity';
+import type { GooglePlayBooksChecklistItem } from './entities/google-play-books.entity';
+import type { GooglePlayBooksMetadata } from './interfaces/google-play-books.interface';
+
+@Injectable()
+export class GooglePlayBooksSubmissionChecklistBuilder {
+  build(metadata: GooglePlayBooksMetadata): GooglePlayBooksChecklistItem[] {
+    return ['Sign in to Google Play Books Partner Center', 'Open Book Catalog', 'Add a new book or select an existing title', 'Select sales option', 'Select ISBN or Google-generated identifier', 'Enter book information', 'Enter title and subtitle', 'Enter author and contributors', 'Enter description', 'Configure publisher and imprint', 'Configure language and subjects', 'Configure series information', 'Configure rights and territories', 'Configure preview settings', 'Upload EPUB or PDF content', 'Upload cover', 'Review file-processing status', 'Resolve content-processing issues', 'Enter pricing', 'Configure sales territories', 'Configure publication or preorder date', 'Review AI-content disclosure where applicable', 'Review the title in Partner Center', 'Publish or save as draft', 'Record external identifiers and status in APC'].map((title, index) => ({ sequence: index + 1, category: index < 14 ? 'METADATA' : index < 18 ? 'FILES' : 'SUBMISSION', title, description: `${title} in Google Play Books Partner Center manual workflow.`, required: true, completionStatus: GooglePlayBooksChecklistStatus.NOT_STARTED, sourceApcField: this.sourceField(title), mappedValue: this.value(title, metadata), validationStatus: 'PENDING_MANUAL_CONFIRMATION', warning: title.includes('Publish') ? 'External submission has not occurred in APC.' : null, manualConfirmationRequired: true }));
+  }
+  private sourceField(title: string): string | null { if (title.includes('title')) return 'bookMetadata.title'; if (title.includes('description')) return 'bookMetadata.description'; if (title.includes('pricing')) return 'googlePlayBooksConfiguration.pricingProfile'; if (title.includes('territories')) return 'googlePlayBooksConfiguration.territories'; return null; }
+  private value(title: string, metadata: GooglePlayBooksMetadata): string | null { if (title.includes('title')) return metadata.title; if (title.includes('description')) return 'Mapped description available'; if (title.includes('pricing')) return `${metadata.pricing.currency} ${metadata.pricing.amount}`; if (title.includes('territories')) return metadata.salesTerritories.join(', '); return null; }
+}

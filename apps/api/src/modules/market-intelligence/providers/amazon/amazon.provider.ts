@@ -8,7 +8,8 @@ import {
   ProviderConfig,
   ProviderResponse,
 } from '../interfaces/provider.interface';
-import { AmazonProviderConfig, isAmazonConfigValid } from './config/amazon-provider.config';
+import { AmazonProviderConfig} from './config/amazon-provider.config';
+import { isAmazonConfigValid } from './config/amazon-provider.config';
 import {
   AMAZON_PROVIDER_KEY,
   AMAZON_PROVIDER_NAME,

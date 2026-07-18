@@ -1,0 +1,5 @@
+import type { PublishingActorType, PublishingHistoryCategory, PublishingHistoryEventType, PublishingHistorySource } from '../entities/publishing-history.entity';
+
+export interface PublishingHistoryRecordInput { projectId: string; workflowId?: string | null; orchestrationId?: string | null; targetExecutionId?: string | null; providerKey?: string | null; eventType: PublishingHistoryEventType; category: PublishingHistoryCategory; status?: string | null; previousStatus?: string | null; actor?: string | null; actorType?: PublishingActorType; source: PublishingHistorySource; correlationId?: string | null; message: string; metadata?: Record<string, unknown>; externalReference?: string | null; timestamp?: Date; }
+export interface PublishingAuditRecordInput { entityType: string; entityId: string; action: string; before?: Record<string, unknown> | null; after?: Record<string, unknown> | null; performedBy?: string | null; source: PublishingHistorySource; reason?: string | null; correlationId?: string | null; metadata?: Record<string, unknown>; timestamp?: Date; }
+export interface PublishingTimelineGroup { key: string; records: unknown[]; count: number }

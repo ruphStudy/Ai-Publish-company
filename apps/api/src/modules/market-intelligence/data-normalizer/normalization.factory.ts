@@ -2,8 +2,9 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { DataSourceProvider } from '../entities/market-intelligence.entity';
 import {
-  PROVIDER_NORMALIZATION_STRATEGIES_TOKEN,
-  ProviderNormalizationStrategy,
+  ProviderNormalizationStrategy} from './interfaces/provider-normalization-strategy.interface';
+import {
+  PROVIDER_NORMALIZATION_STRATEGIES_TOKEN
 } from './interfaces/provider-normalization-strategy.interface';
 
 @Injectable()

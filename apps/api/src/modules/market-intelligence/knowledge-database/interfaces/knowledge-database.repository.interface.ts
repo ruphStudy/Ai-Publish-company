@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import { MarketKnowledgeQueryDto } from '../dto';
-import { MarketKnowledge } from '../entities/market-knowledge.entity';
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type { MarketKnowledgeQueryDto } from '../dto';
+import type { MarketKnowledge } from '../entities/market-knowledge.entity';
 
 export interface MarketKnowledgePersistenceData {
   provider: DataSourceProvider;

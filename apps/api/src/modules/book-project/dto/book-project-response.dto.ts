@@ -1,4 +1,4 @@
-import {
+import type {
   BookProjectStage,
   BookProjectStatus,
 } from '../entities/book-project.entity';

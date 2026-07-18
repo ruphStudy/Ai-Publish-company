@@ -1,0 +1,21 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { platformProviderRegistryDefaults } from '../../core/platform';
+import { PublishingCapability, PublishingTargetStatus } from '../publishing-workflow/entities/publishing-workflow.entity';
+import type { PublishingPackageReference, PublishingProvider, PublishingProviderCapabilities, PublishingProviderError, PublishingSubmissionRequest, PublishingSubmissionResponse } from '../publishing-workflow/interfaces/publishing-provider.interface';
+import { GooglePlayBooksErrorMapper } from './google-play-books-error.mapper';
+import { GooglePlayBooksIntegrationMode } from './entities/google-play-books.entity';
+
+@Injectable()
+export class GooglePlayBooksPublishingProvider implements PublishingProvider {
+  constructor(private readonly errors: GooglePlayBooksErrorMapper) {}
+  async validateConfiguration(config: Record<string, unknown>): Promise<void> { if (config.integrationMode === GooglePlayBooksIntegrationMode.API) throw new BadRequestException('Google Play Books API mode is unavailable until an official publishing adapter is configured'); }
+  async validatePackage(pkg: PublishingPackageReference): Promise<void> { if (!pkg.reference || !pkg.checksum || !pkg.artifactIds.length) throw new BadRequestException('Google Play Books package requires artifact references and checksum'); }
+  async prepareSubmission(request: PublishingSubmissionRequest): Promise<PublishingSubmissionRequest> { await this.validateConfiguration(request.targetConfiguration); await this.validatePackage(request.packageReference); return request; }
+  async submit(request: PublishingSubmissionRequest): Promise<PublishingSubmissionResponse> { await this.prepareSubmission(request); return { externalSubmissionId: `manual-gpb-${request.submissionFingerprint.slice(0, 16)}`, status: PublishingTargetStatus.READY, providerStatus: 'READY_FOR_SUBMISSION', providerStatusMessage: 'Google Play Books manual-assisted package is ready. No external submission has occurred.', normalizedResponse: { provider: 'GOOGLE_PLAY_BOOKS', integrationMode: GooglePlayBooksIntegrationMode.MANUAL_ASSISTED, externalSubmissionPerformed: false, manualSubmissionRequired: true, publicVolumesApiUsedForPublishing: false } }; }
+  async getSubmissionStatus(externalSubmissionId: string): Promise<PublishingSubmissionResponse> { return { externalSubmissionId, status: PublishingTargetStatus.READY, providerStatus: 'READY_FOR_SUBMISSION', providerStatusMessage: 'Awaiting manually recorded Google Play Books status.', normalizedResponse: { provider: 'GOOGLE_PLAY_BOOKS', statusSource: 'MANUAL_APC_RECORD' } }; }
+  async cancelSubmission(externalSubmissionId: string): Promise<PublishingSubmissionResponse> { return { externalSubmissionId, status: PublishingTargetStatus.CANCELLED, providerStatus: 'LOCAL_CANCELLED', providerStatusMessage: 'Only the local APC workflow was cancelled. Google Play Books remote cancellation is not automated.', normalizedResponse: { provider: 'GOOGLE_PLAY_BOOKS', remoteCancellationPerformed: false } }; }
+  mapProviderError(error: unknown): PublishingProviderError { return this.errors.map(error); }
+  normalizeProviderResponse(response: unknown): Record<string, unknown> { return this.errors.redact(typeof response === 'object' && response ? response as Record<string, unknown> : { response }); }
+  getCapabilities(): PublishingProviderCapabilities { return { providerKey: 'GOOGLE_PLAY_BOOKS', capabilities: [PublishingCapability.EBOOK, PublishingCapability.EPUB, PublishingCapability.PDF_EBOOK, PublishingCapability.TERRITORY_SELECTION, PublishingCapability.PRICING, PublishingCapability.MULTI_CURRENCY, PublishingCapability.DRM, PublishingCapability.ISBN, PublishingCapability.PROVIDER_GENERATED_IDENTIFIER, PublishingCapability.AUTHOR_PROFILE, PublishingCapability.CONTRIBUTORS, PublishingCapability.SERIES, PublishingCapability.CATEGORIES, PublishingCapability.SUBJECTS, PublishingCapability.PREVIEW_CONFIGURATION, PublishingCapability.STATUS_MANUAL_UPDATE, PublishingCapability.METADATA_UPDATE, PublishingCapability.FILE_REPLACEMENT, PublishingCapability.PUBLICATION_DATE], supportsCancellation: false, supportsStatusPolling: false }; }
+  getMetadata() { return platformProviderRegistryDefaults.find((provider) => provider.identifier === this.getCapabilities().providerKey) ?? null; }
+}

@@ -14,7 +14,8 @@ import {
   BookResponseDto,
   PaginatedBookResponseDto,
 } from './dto';
-import { Book, BookStatus, BookStage } from './entities/book.entity';
+import { Book} from './entities/book.entity';
+import { BookStatus, BookStage } from './entities/book.entity';
 
 @Injectable()
 export class BookService {

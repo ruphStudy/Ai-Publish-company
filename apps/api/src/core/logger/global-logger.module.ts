@@ -42,16 +42,25 @@ import { AppLoggerService } from './logger.service';
             paths: [
               'req.headers.authorization',
               'req.headers.cookie',
+              'req.headers.set-cookie',
+              'req.headers.x-api-key',
               'req.body.password',
+              'req.body.token',
+              'req.body.accessToken',
               'req.body.refreshToken',
+              'req.body.secret',
+              'req.body.apiKey',
+              'req.body.clientSecret',
+              'req.body.credentials',
+              'res.headers.set-cookie',
             ],
             remove: true,
           },
           customProps: (req: IncomingMessage) => ({
-            correlationId: (req as any).correlationId || randomUUID(),
+            correlationId: (req as IncomingMessage & { correlationId?: string }).correlationId ?? randomUUID(),
           }),
           serializers: {
-            req: (req: any) => ({
+            req: (req) => ({
               id: req.id,
               method: req.method,
               url: req.url,
@@ -61,14 +70,14 @@ import { AppLoggerService } from './logger.service';
               ip: req.headers['x-forwarded-for'] || req.remoteAddress,
               userAgent: req.headers['user-agent'],
             }),
-            res: (res: any) => ({
+            res: (res) => ({
               statusCode: res.statusCode,
               responseTime: res.responseTime,
             }),
-            err: (err: any) => ({
+            err: (err) => ({
               type: err.type,
               message: err.message,
-              stack: err.stack,
+              stack: config.get<string>('nodeEnv') === 'production' ? undefined : err.stack,
               code: err.code,
               statusCode: err.statusCode,
             }),
@@ -76,10 +85,10 @@ import { AppLoggerService } from './logger.service';
           autoLogging: {
             ignore: (req: IncomingMessage) => req.url === '/api/v1/health',
           },
-          customSuccessMessage: (req: any, res: any) => {
-            return `${req.method} ${req.url} ${res.statusCode} - ${res.responseTime}ms`;
+          customSuccessMessage: (req, res, responseTime) => {
+            return `${req.method} ${req.url} ${res.statusCode} - ${responseTime}ms`;
           },
-          customErrorMessage: (req: any, res: any, err: Error) => {
+          customErrorMessage: (req, res, err) => {
             return `${req.method} ${req.url} ${res.statusCode} - ${err.message}`;
           },
         },

@@ -1,6 +1,7 @@
 import { DataSourceProvider } from '../../../entities/market-intelligence.entity';
-import { ProviderError, ProviderErrorCode } from '../../interfaces/provider.interface';
-import { AmazonApiError, AmazonHttpError } from '../interfaces/amazon.interface';
+import type { ProviderError} from '../../interfaces/provider.interface';
+import { ProviderErrorCode } from '../../interfaces/provider.interface';
+import type { AmazonApiError, AmazonHttpError } from '../interfaces/amazon.interface';
 import { AMAZON_ERROR_CODE_MAP } from '../constants/amazon.constants';
 
 export class AmazonProviderExceptionHandler {
@@ -55,9 +56,13 @@ export class AmazonProviderExceptionHandler {
       };
     }
 
+    const body = responseBody as {
+      Errors?: AmazonApiError[];
+      SearchResult?: { Errors?: AmazonApiError[] };
+    };
     const bodyErrors =
-      (responseBody as any)?.Errors ??
-      (responseBody as any)?.SearchResult?.Errors ??
+      body.Errors ??
+      body.SearchResult?.Errors ??
       [];
 
     if (Array.isArray(bodyErrors) && bodyErrors.length > 0) {
@@ -75,9 +80,12 @@ export class AmazonProviderExceptionHandler {
 
   static fromException(error: unknown): ProviderError {
     if (error instanceof Error) {
-      const code = (error as any).code as string | undefined;
-      const statusCode = (error as any).statusCode as number | undefined;
-      const responseBody = (error as any).responseBody;
+      const details = error as Error & {
+        code?: string;
+        statusCode?: number;
+        responseBody?: object;
+      };
+      const { code, statusCode, responseBody } = details;
 
       if (statusCode !== undefined) {
         return AmazonProviderExceptionHandler.fromHttpError({

@@ -1,5 +1,5 @@
-import { MarketDataType } from '../entities/market-intelligence.entity';
-import { NormalizedData } from './data-normalizer.interface';
+import type { MarketDataType } from '../entities/market-intelligence.entity';
+import type { NormalizedData } from './data-normalizer.interface';
 
 export interface ScoredData extends NormalizedData {
   opportunityScore: number;

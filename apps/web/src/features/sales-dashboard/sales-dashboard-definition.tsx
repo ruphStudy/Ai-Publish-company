@@ -1,0 +1,63 @@
+import { BarChart3 } from 'lucide-react';
+import type { DashboardDefinition, DashboardWidgetDefinition } from '@/features/analytics-dashboard/types';
+import { CountryPerformance, FormatPerformance, MarketplacePerformance, ProviderPerformance, RecentSalesActivity, SalesDataFreshness, SalesDistribution, SalesOverview, SalesTrend, SalesVelocity, TopSellingBooks, UnderperformingBooks } from './components/sales-dashboard-sections';
+
+export const salesDashboardWidgets: DashboardWidgetDefinition[] = [
+  { key: 'SALES_OVERVIEW', type: 'KPI', title: 'Sales Overview', category: 'PERFORMANCE', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'], queryDefinition: { queryKeyBase: 'sales-overview' }, defaultSize: { columns: 12, rows: 2 }, minimumSize: { columns: 6, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <SalesOverview filters={filters} /> },
+  { key: 'SALES_TREND', type: 'TREND_CHART', title: 'Sales Trend', category: 'PERFORMANCE', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'], queryDefinition: { queryKeyBase: 'sales-trend' }, defaultSize: { columns: 12, rows: 3 }, minimumSize: { columns: 6, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV', 'PNG'], version: 1, render: ({ filters }) => <SalesTrend filters={filters} /> },
+  { key: 'SALES_TOP_BOOKS', type: 'RANKING', title: 'Top Selling Books', category: 'PERFORMANCE', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'sales-top-books' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <TopSellingBooks filters={filters} /> },
+  { key: 'SALES_UNDERPERFORMING_BOOKS', type: 'OPPORTUNITY', title: 'Underperforming Books', category: 'OPPORTUNITIES', requiredPermissions: ['analytics:read', 'opportunities:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'sales-underperforming-books' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <UnderperformingBooks filters={filters} /> },
+  { key: 'SALES_MARKETPLACE_PERFORMANCE', type: 'BREAKDOWN', title: 'Marketplace Performance', category: 'DISTRIBUTION', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'MARKETPLACE'], queryDefinition: { queryKeyBase: 'sales-marketplace-performance' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <MarketplacePerformance filters={filters} /> },
+  { key: 'SALES_PROVIDER_PERFORMANCE', type: 'BREAKDOWN', title: 'Provider Performance', category: 'DISTRIBUTION', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'PROVIDER'], queryDefinition: { queryKeyBase: 'sales-provider-performance' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <ProviderPerformance filters={filters} /> },
+  { key: 'SALES_COUNTRY_PERFORMANCE', type: 'BAR_CHART', title: 'Country Performance', category: 'DISTRIBUTION', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'COUNTRY', 'TERRITORY'], queryDefinition: { queryKeyBase: 'sales-country-performance' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <CountryPerformance filters={filters} /> },
+  { key: 'SALES_FORMAT_PERFORMANCE', type: 'BAR_CHART', title: 'Format Performance', category: 'DISTRIBUTION', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'FORMAT'], queryDefinition: { queryKeyBase: 'sales-format-performance' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <FormatPerformance filters={filters} /> },
+  { key: 'SALES_DISTRIBUTION', type: 'BREAKDOWN', title: 'Sales Distribution', category: 'DISTRIBUTION', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'FORMAT'], queryDefinition: { queryKeyBase: 'sales-distribution' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <SalesDistribution filters={filters} /> },
+  { key: 'SALES_VELOCITY', type: 'KPI', title: 'Sales Velocity', category: 'PERFORMANCE', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION'], queryDefinition: { queryKeyBase: 'sales-velocity' }, defaultSize: { columns: 6, rows: 2 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <SalesVelocity filters={filters} /> },
+  { key: 'SALES_RECENT_ACTIVITY', type: 'ACTIVITY', title: 'Recent Sales Activity', category: 'OPERATIONS', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'sales-recent-activity' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <RecentSalesActivity filters={filters} /> },
+  { key: 'SALES_DATA_FRESHNESS', type: 'HEALTH', title: 'Sales Data Freshness', category: 'OPERATIONS', requiredPermissions: ['analytics:read'], supportedDashboards: ['sales-dashboard'], supportedScopes: ['PROJECT', 'PORTFOLIO'], queryDefinition: { queryKeyBase: 'sales-data-freshness' }, defaultSize: { columns: 6, rows: 3 }, minimumSize: { columns: 4, rows: 2 }, refreshBehavior: 'INHERIT', exportCapabilities: ['CSV'], version: 1, render: ({ filters }) => <SalesDataFreshness filters={filters} /> },
+];
+
+export const salesDashboardDefinition: DashboardDefinition = {
+  key: 'sales-dashboard',
+  route: '/analytics/sales',
+  title: 'Sales Dashboard',
+  description: 'Detailed sales analytics across books, editions, providers, marketplaces, countries, formats, and time.',
+  icon: BarChart3,
+  category: 'PERFORMANCE',
+  order: 40,
+  enabled: true,
+  featureFlag: 'salesDashboard',
+  requiredPermissions: ['analytics:read'],
+  supportedScopes: ['PROJECT', 'PORTFOLIO', 'BOOK', 'EDITION', 'AUTHOR', 'SERIES', 'PROVIDER', 'MARKETPLACE', 'COUNTRY', 'TERRITORY', 'FORMAT'],
+  defaultScope: 'PORTFOLIO',
+  supportedFilters: ['projectId', 'portfolioId', 'bookIds', 'editionIds', 'authorIds', 'seriesIds', 'providerKeys', 'marketplaceIds', 'countryCodes', 'territoryCodes', 'formats', 'period', 'dateRange', 'comparisonMode', 'comparisonDateRange', 'search'],
+  defaultFilters: { scope: 'PORTFOLIO', period: 'LAST_30_DAYS', comparisonMode: 'PREVIOUS_PERIOD' },
+  supportedPeriods: ['TODAY', 'YESTERDAY', 'LAST_7_DAYS', 'LAST_30_DAYS', 'LAST_90_DAYS', 'CURRENT_WEEK', 'PREVIOUS_WEEK', 'CURRENT_MONTH', 'PREVIOUS_MONTH', 'CURRENT_QUARTER', 'CURRENT_YEAR', 'CUSTOM'],
+  defaultPeriod: 'LAST_30_DAYS',
+  supportedComparisonModes: ['NONE', 'PREVIOUS_PERIOD', 'PREVIOUS_CALENDAR_PERIOD', 'PREVIOUS_YEAR', 'CUSTOM'],
+  defaultComparisonMode: 'PREVIOUS_PERIOD',
+  widgetDefinitions: salesDashboardWidgets,
+  layoutDefinition: {
+    columns: 12,
+    density: 'COMFORTABLE',
+    minWidgetHeight: 180,
+    items: [
+      { widgetKey: 'SALES_OVERVIEW', colSpan: 12, order: 1 },
+      { widgetKey: 'SALES_TREND', colSpan: 12, order: 2 },
+      { widgetKey: 'SALES_TOP_BOOKS', colSpan: 6, order: 3 },
+      { widgetKey: 'SALES_UNDERPERFORMING_BOOKS', colSpan: 6, order: 4 },
+      { widgetKey: 'SALES_MARKETPLACE_PERFORMANCE', colSpan: 6, order: 5 },
+      { widgetKey: 'SALES_PROVIDER_PERFORMANCE', colSpan: 6, order: 6 },
+      { widgetKey: 'SALES_COUNTRY_PERFORMANCE', colSpan: 6, order: 7 },
+      { widgetKey: 'SALES_FORMAT_PERFORMANCE', colSpan: 6, order: 8 },
+      { widgetKey: 'SALES_DISTRIBUTION', colSpan: 6, order: 9 },
+      { widgetKey: 'SALES_VELOCITY', colSpan: 6, order: 10 },
+      { widgetKey: 'SALES_RECENT_ACTIVITY', colSpan: 6, order: 11 },
+      { widgetKey: 'SALES_DATA_FRESHNESS', colSpan: 6, order: 12 },
+    ],
+  },
+  exportCapabilities: ['CSV', 'XLSX'],
+  refreshCapabilities: ['DASHBOARD', 'WIDGET', 'VISIBLE_WIDGETS', 'BACKGROUND'],
+  savedViewSupport: true,
+  metadata: { domain: 'sales', defaultGranularity: 'DAILY' },
+};

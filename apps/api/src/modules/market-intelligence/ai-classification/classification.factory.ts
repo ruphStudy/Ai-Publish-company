@@ -1,8 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import {
-  CLASSIFICATION_STRATEGIES_TOKEN,
-  ClassificationStrategy,
+  ClassificationStrategy} from './interfaces/classification-strategy.interface';
+import {
+  CLASSIFICATION_STRATEGIES_TOKEN
 } from './interfaces/classification-strategy.interface';
 import { ClassificationContext } from './models/classification-result.model';
 

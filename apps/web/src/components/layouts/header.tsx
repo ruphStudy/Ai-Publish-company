@@ -1,6 +1,5 @@
-import { Bell, Search, Moon, Sun, Settings, LogOut, User, ChevronDown } from 'lucide-react';
+import { Bell, Moon, Sun, Settings, LogOut, User, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
@@ -27,22 +26,24 @@ export interface HeaderNotification {
 interface HeaderProps {
   notifications?: HeaderNotification[];
   user?: { name: string; email?: string; role?: string; avatarUrl?: string; initials?: string };
-  onSearch?: (query: string) => void;
   onSignOut?: () => void;
   onProfileClick?: () => void;
   onSettingsClick?: () => void;
   onNotificationRead?: (id: string) => void;
+  onNotificationOpen?: (id: string) => void;
+  onAllNotificationsRead?: () => void;
   className?: string;
 }
 
 export function Header({
   notifications = [],
-  user = { name: 'John Doe', role: 'Admin', initials: 'JD' },
-  onSearch,
+  user = { name: 'User', initials: 'US' },
   onSignOut,
   onProfileClick,
   onSettingsClick,
   onNotificationRead,
+  onNotificationOpen,
+  onAllNotificationsRead,
   className,
 }: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
@@ -55,17 +56,7 @@ export function Header({
         className,
       )}
     >
-      <div className="flex flex-1 items-center gap-4">
-        <div className="relative flex-1 md:max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" aria-hidden />
-          <Input
-            placeholder="Search..."
-            className="pl-9"
-            onChange={(e) => onSearch?.(e.target.value)}
-            aria-label="Global search"
-          />
-        </div>
-      </div>
+      <div className="flex flex-1 items-center gap-4" />
 
       <div className="flex items-center gap-1">
         <Button
@@ -90,6 +81,7 @@ export function Header({
                 <h3 className="text-sm font-semibold">Notifications</h3>
                 {unreadCount > 0 && <Badge className="h-5 text-xs">{unreadCount}</Badge>}
               </div>
+              {unreadCount > 0 && <Button variant="ghost" size="sm" onClick={onAllNotificationsRead}>Mark all read</Button>}
             </div>
             <div className="max-h-72 overflow-y-auto">
               {notifications.length === 0 ? (
@@ -102,7 +94,10 @@ export function Header({
                   <button
                     key={n.id}
                     type="button"
-                    onClick={() => onNotificationRead?.(n.id)}
+                    onClick={() => {
+                      onNotificationRead?.(n.id);
+                      onNotificationOpen?.(n.id);
+                    }}
                     className={cn(
                       'flex w-full items-start gap-3 border-b px-4 py-3 text-left last:border-0 hover:bg-muted',
                       !n.read && 'bg-primary/5',

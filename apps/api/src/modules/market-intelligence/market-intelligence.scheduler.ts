@@ -3,7 +3,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 
 import { MARKET_INTELLIGENCE_QUEUE } from './market-intelligence.constants';
-import { DataSourceProvider } from './entities/market-intelligence.entity';
+import { DataSourceProvider, MarketDataType } from './entities/market-intelligence.entity';
 import {
   IMarketIntelligenceScheduler,
   ScheduleCollectionParams,
@@ -58,7 +58,7 @@ export class MarketIntelligenceSchedulerService implements IMarketIntelligenceSc
       providers.map((provider) =>
         this.scheduleCollection({
           provider,
-          params: { provider, dataType: undefined as any },
+          params: { provider, dataType: MarketDataType.MARKET_TREND },
         }),
       ),
     );

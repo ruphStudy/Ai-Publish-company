@@ -73,10 +73,10 @@ export class GoogleTrendsValidator {
   }
 
   private isValidQueryType(value: string): boolean {
-    return Object.values(GOOGLE_TRENDS_QUERY_TYPE).includes(value as any);
+    return (Object.values(GOOGLE_TRENDS_QUERY_TYPE) as readonly string[]).includes(value);
   }
 
   private isValidTimeRange(value: string): boolean {
-    return Object.values(GOOGLE_TRENDS_TIME_RANGE).includes(value as any);
+    return (Object.values(GOOGLE_TRENDS_TIME_RANGE) as readonly string[]).includes(value);
   }
 }

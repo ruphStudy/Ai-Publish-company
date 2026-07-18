@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
+import type {
+  TrendHistoryConfig} from './config/trend-history.config';
 import {
-  TREND_HISTORY_CONFIG_TOKEN,
-  TrendHistoryConfig,
+  TREND_HISTORY_CONFIG_TOKEN
 } from './config/trend-history.config';
 import { TrendHistory } from './entities/trend-history.entity';
 import {

@@ -1,7 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 import { DataSourceProvider } from '../../entities/market-intelligence.entity';
-import { ProviderStatus, ProviderHealthResult } from '../interfaces/provider.interface';
+import { ProviderHealthResult } from '../interfaces/provider.interface';
+import { ProviderStatus } from '../interfaces/provider.interface';
 
 export class ProviderRegistrationResponseDto {
   @ApiProperty({ example: '507f1f77bcf86cd799439011' })
@@ -43,7 +44,7 @@ export class ProviderRegistrationResponseDto {
   @ApiPropertyOptional({ nullable: true, example: 1000 })
   rateLimitRpd: number | null;
 
-  @ApiProperty({ type: 'object', example: {} })
+  @ApiProperty({ type: 'object', additionalProperties: true, example: {} })
   customConfig: Record<string, unknown>;
 
   @ApiPropertyOptional({ nullable: true })

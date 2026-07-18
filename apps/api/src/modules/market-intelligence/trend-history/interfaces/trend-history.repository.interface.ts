@@ -1,8 +1,8 @@
-import { Types } from 'mongoose';
+import type { Types } from 'mongoose';
 
-import { TrendHistoryQueryDto } from '../dto';
-import { TrendHistory } from '../entities/trend-history.entity';
-import {
+import type { TrendHistoryQueryDto } from '../dto';
+import type { TrendHistory } from '../entities/trend-history.entity';
+import type {
   HistoricalStatisticsResult,
   TrendSnapshotData,
 } from '../models/trend-history.model';

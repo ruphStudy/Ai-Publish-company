@@ -1,0 +1,73 @@
+import { createHash, randomUUID } from 'crypto';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { MultiPlatformTargetStatus } from '../multi-platform-publishing/entities/multi-platform-publishing.entity';
+import { MultiPlatformPublishingRepository } from '../multi-platform-publishing/multi-platform-publishing.repository';
+import { MultiPlatformTargetRepository } from '../multi-platform-publishing/multi-platform-target.repository';
+import { PublishingProviderFactory } from '../publishing-workflow/publishing-provider.factory';
+import { PublishingTargetExecutionRepository } from '../publishing-workflow/publishing-target-execution.repository';
+import { PublishingWorkflowRepository } from '../publishing-workflow/publishing-workflow.repository';
+import { PublicationStatusSyncPolicy } from './config/publication-status-sync.config';
+import { ManualPublicationStatusDto, SyncPublicationStatusDto } from './dto';
+import { NormalizedPublicationStatus, ProviderSyncStatus, PublicationStatusEventType, PublicationStatusSource, PublicationSyncMode, PublicationSyncTriggerType } from './entities/publication-status-sync.entity';
+import { PublicationStatusHistoryRepository } from './publication-status-history.repository';
+import { PublicationStatusAggregator } from './publication-status-aggregator';
+import { PublicationStatusConflictResolver } from './publication-status-conflict.resolver';
+import { PublicationStatusEventPublisher } from './publication-status-event.publisher';
+import { PublicationStatusNormalizer } from './publication-status-normalizer';
+import { PublicationStatusSyncRepository } from './publication-status-sync.repository';
+import { PublicationStatusSyncStrategyFactory } from './publication-status-sync-strategy.factory';
+import { PublicationStatusTransitionValidator } from './publication-status-transition.validator';
+
+@Injectable()
+export class PublicationStatusSyncEngine {
+  constructor(private readonly targets: PublishingTargetExecutionRepository, private readonly workflows: PublishingWorkflowRepository, private readonly multiTargets: MultiPlatformTargetRepository, private readonly orchestrations: MultiPlatformPublishingRepository, private readonly providers: PublishingProviderFactory, private readonly syncs: PublicationStatusSyncRepository, private readonly history: PublicationStatusHistoryRepository, private readonly normalizer: PublicationStatusNormalizer, private readonly transitions: PublicationStatusTransitionValidator, private readonly conflicts: PublicationStatusConflictResolver, private readonly strategies: PublicationStatusSyncStrategyFactory, private readonly aggregator: PublicationStatusAggregator, private readonly events: PublicationStatusEventPublisher) {}
+  async syncTarget(dto: SyncPublicationStatusDto, requestedBy?: string) {
+    const policy = this.strategies.policy(); const target = await this.targets.findById(dto.targetExecutionId); if (!target) throw new NotFoundException('Publishing target execution not found');
+    const provider = this.providers.resolve(target.providerKey); const capabilities = provider.getCapabilities(); const latest = await this.history.findLatestByTarget(dto.targetExecutionId);
+    const config = this.strategies.provider(target.providerKey); const active = await this.syncs.findActiveSync(dto.targetExecutionId);
+    const eligibility = this.strategies.eligibility({ providerKey: target.providerKey, supportsStatusPolling: capabilities.supportsStatusPolling, externalSubmissionId: target.externalSubmissionId, terminalProtected: latest ? policy.protectedTerminalStatuses.includes(latest.status) : false, activeSync: Boolean(active), retryCount: target.retryCount });
+    if (!eligibility.eligible) throw new ConflictException(eligibility.reason);
+    const idempotencyKey = dto.idempotencyKey ?? this.idempotencyKey(dto.targetExecutionId, target.externalSubmissionId ?? '', dto.triggerType ?? PublicationSyncTriggerType.MANUAL);
+    const existing = await this.syncs.findByIdempotencyKey(idempotencyKey); if (existing?.syncStatus === ProviderSyncStatus.SYNCHRONIZED) return existing;
+    const sync = existing ?? await this.syncs.create({ syncOperationId: `PSS-${randomUUID()}`, targetExecutionId: dto.targetExecutionId, workflowId: target.workflowId, orchestrationId: null, projectId: target.projectId, providerKey: target.providerKey, triggerType: dto.triggerType ?? PublicationSyncTriggerType.MANUAL, syncMode: dto.syncMode ?? PublicationSyncMode.SINGLE_TARGET, syncStatus: ProviderSyncStatus.SYNCING, source: PublicationStatusSource.PROVIDER_API, idempotencyKey, lockKey: `publication-status:${dto.targetExecutionId}`, attempt: 1, retryCount: 0, maximumRetries: config?.maximumRetries ?? 0, startedAt: new Date(), previousNormalizedStatus: latest?.status ?? null, correlationId: dto.correlationId ?? null, createdBy: requestedBy ?? null, updatedBy: requestedBy ?? null });
+    this.events.publish(PublicationStatusEventType.STATUS_SYNC_STARTED, { syncOperationId: sync.syncOperationId, targetExecutionId: dto.targetExecutionId });
+    try {
+      const response = await provider.getSubmissionStatus(target.externalSubmissionId!);
+      const result = this.normalizer.fromProvider(target.providerKey, dto.targetExecutionId, response, PublicationStatusSource.PROVIDER_API);
+      return this.applyResult(String(sync._id), result, policy, requestedBy, dto.reconciliation);
+    } catch (error) {
+      const mapped = provider.mapProviderError(error); const retryable = mapped.retryable && sync.retryCount < sync.maximumRetries; const nextRetryAt = retryable ? new Date(Date.now() + (config?.retryDelayMs ?? 60_000)) : null;
+      return this.syncs.update(String(sync._id), { syncStatus: retryable ? ProviderSyncStatus.RETRY_PENDING : ProviderSyncStatus.FAILED, retryCount: sync.retryCount + 1, nextRetryAt, failedAt: retryable ? null : new Date(), error: { code: mapped.code, message: mapped.message, category: mapped.category, retryable: mapped.retryable } });
+    }
+  }
+  async manualUpdate(targetExecutionId: string, dto: ManualPublicationStatusDto, requestedBy: string, correction = false) {
+    const target = await this.targets.findById(targetExecutionId); if (!target) throw new NotFoundException('Publishing target execution not found');
+    if (!dto.statusMessage && [NormalizedPublicationStatus.ACTION_REQUIRED, NormalizedPublicationStatus.REJECTED].includes(dto.status)) throw new BadRequestException('Status message is required for action-required or rejected updates');
+    if (correction && !dto.correctionReason) throw new BadRequestException('Correction reason is required');
+    const result = this.normalizer.manual({ providerKey: target.providerKey, targetExecutionId, status: dto.status, statusMessage: dto.statusMessage, externalSubmissionId: dto.externalSubmissionId ?? target.externalSubmissionId ?? undefined, externalPublicationId: dto.externalPublicationId ?? target.externalPublicationId ?? undefined, publicationUrl: dto.publicationUrl, providerUpdatedAt: dto.providerUpdatedAt ? new Date(dto.providerUpdatedAt) : null, source: correction ? PublicationStatusSource.ADMIN_CORRECTION : PublicationStatusSource.MANUAL_UPDATE, actionRequiredDetails: dto.actionRequiredDetails, rejectionDetails: dto.rejectionDetails });
+    const sync = await this.syncs.create({ syncOperationId: `PSS-${randomUUID()}`, targetExecutionId, workflowId: target.workflowId, orchestrationId: null, projectId: target.projectId, providerKey: target.providerKey, triggerType: correction ? PublicationSyncTriggerType.ADMIN : PublicationSyncTriggerType.MANUAL, syncMode: PublicationSyncMode.SINGLE_TARGET, syncStatus: ProviderSyncStatus.SYNCING, source: result.source, idempotencyKey: this.idempotencyKey(targetExecutionId, result.providerResponseFingerprint, result.source), lockKey: `publication-status:${targetExecutionId}`, attempt: 1, retryCount: 0, maximumRetries: 0, startedAt: new Date(), previousNormalizedStatus: (await this.history.findLatestByTarget(targetExecutionId))?.status ?? null, createdBy: requestedBy, updatedBy: requestedBy });
+    return this.applyResult(String(sync._id), result, this.strategies.policy(), requestedBy, correction, dto.correctionReason);
+  }
+  async applyResult(syncId: string, result: Awaited<ReturnType<PublicationStatusNormalizer['manual']>>, policy: PublicationStatusSyncPolicy, requestedBy?: string, reconciliation = false, correctionReason?: string) {
+    const sync = await this.syncs.findById(syncId); if (!sync) throw new NotFoundException('Sync operation not found');
+    const latest = await this.history.findLatestByTarget(result.targetExecutionId); const duplicate = await this.history.findByResponseFingerprint(result.targetExecutionId, result.providerResponseFingerprint);
+    if (duplicate) return this.syncs.update(syncId, { syncStatus: ProviderSyncStatus.SYNCHRONIZED, completedAt: new Date(), fetchedNormalizedStatus: result.normalizedStatus, appliedNormalizedStatus: duplicate.status, providerResponseFingerprint: result.providerResponseFingerprint });
+    const stale = Boolean(latest?.providerUpdatedAt && result.providerUpdatedAt && result.providerUpdatedAt.getTime() + policy.staleToleranceMs < latest.providerUpdatedAt.getTime());
+    const conflict = this.conflicts.detect(latest ? { status: latest.status, providerUpdatedAt: latest.providerUpdatedAt, source: latest.source, externalSubmissionId: latest.externalSubmissionId } : null, result, policy);
+    const apply = !stale && this.conflicts.shouldApply(conflict, latest ? { providerUpdatedAt: latest.providerUpdatedAt, source: latest.source } : null, result, policy);
+    if (apply) this.transitions.validate(latest?.status ?? null, result.normalizedStatus, result.source, { reconciliation, correction: Boolean(correctionReason) });
+    const history = await this.history.create({ historyId: `PSH-${randomUUID()}`, targetExecutionId: result.targetExecutionId, workflowId: sync.workflowId, orchestrationId: sync.orchestrationId, projectId: sync.projectId, providerKey: result.providerKey, externalSubmissionId: result.externalSubmissionId, externalPublicationId: result.externalPublicationId, previousStatus: latest?.status ?? null, status: result.normalizedStatus, rawProviderStatus: result.rawStatusCode, statusMessage: result.statusMessage, source: result.source, triggerType: sync.triggerType, providerUpdatedAt: result.providerUpdatedAt, recordedAt: new Date(), recordedBy: requestedBy ?? null, responseFingerprint: result.providerResponseFingerprint, publicationUrl: result.publicationUrl, actionRequiredDetails: result.actionRequiredDetails, rejectionDetails: result.rejectionDetails, stale, applied: apply, conflictId: conflict?.conflictId ?? null, correctionReason: correctionReason ?? null, metadata: result.sanitizedMetadata, correlationId: sync.correlationId, createdBy: requestedBy ?? null, updatedBy: requestedBy ?? null });
+    if (apply) await this.updateAggregates(result.targetExecutionId, result.normalizedStatus, result.externalSubmissionId, result.externalPublicationId, result.statusMessage);
+    const config = this.strategies.provider(result.providerKey); const nextRetryAt = apply && config ? this.strategies.nextSyncAt(config, sync.attempt, result.retryAfter) : null;
+    return this.syncs.update(syncId, { syncStatus: ProviderSyncStatus.SYNCHRONIZED, completedAt: new Date(), nextRetryAt, previousNormalizedStatus: latest?.status ?? null, fetchedNormalizedStatus: result.normalizedStatus, appliedNormalizedStatus: apply ? result.normalizedStatus : latest?.status ?? null, providerResponseFingerprint: result.providerResponseFingerprint, providerUpdatedAt: result.providerUpdatedAt, fetchedAt: result.fetchedAt, stale, conflictDetected: Boolean(conflict), conflictResolution: conflict ? { conflict, apply } : null, updatedBy: requestedBy ?? null, error: null, providerRetryAfter: result.retryAfter, lastError: undefined, historyId: String(history._id) } as never);
+  }
+  async updateAggregates(targetExecutionId: string, status: NormalizedPublicationStatus, externalSubmissionId: string | null, externalPublicationId: string | null, message: string | null) {
+    const target = await this.targets.findById(targetExecutionId); if (!target) return;
+    const workflowStatus = this.normalizer.toWorkflowStatus(status); const update: Record<string, unknown> = { status: workflowStatus, providerStatus: status, providerStatusMessage: message, externalSubmissionId: externalSubmissionId ?? target.externalSubmissionId, externalPublicationId: externalPublicationId ?? target.externalPublicationId, normalizedResponse: { ...(target.normalizedResponse ?? {}), publicationStatus: status, lastSyncedAt: new Date() } };
+    if (status === NormalizedPublicationStatus.LIVE && !target.publishedAt) update.publishedAt = new Date(); if (status === NormalizedPublicationStatus.REJECTED && !target.rejectedAt) update.rejectedAt = new Date(); if (status === NormalizedPublicationStatus.FAILED && !target.failedAt) update.failedAt = new Date(); if (status === NormalizedPublicationStatus.CANCELLED && !target.cancelledAt) update.cancelledAt = new Date(); if (status === NormalizedPublicationStatus.SUBMITTED && !target.submittedAt) update.submittedAt = new Date();
+    await this.targets.update(targetExecutionId, update);
+    const workflowTargets = await this.targets.findByWorkflowId(target.workflowId); await this.workflows.update(target.workflowId, { status: this.aggregator.workflowStatus(workflowTargets) });
+    const coordinated = await this.multiTargets.search({ targetExecutionId }, 1, 50); for (const item of coordinated.items) { const mapped = status === NormalizedPublicationStatus.LIVE ? MultiPlatformTargetStatus.PUBLISHED : status === NormalizedPublicationStatus.REJECTED ? MultiPlatformTargetStatus.REJECTED : status === NormalizedPublicationStatus.ACTION_REQUIRED ? MultiPlatformTargetStatus.ACTION_REQUIRED : status === NormalizedPublicationStatus.CANCELLED ? MultiPlatformTargetStatus.CANCELLED : MultiPlatformTargetStatus.PROCESSING; await this.multiTargets.update(String(item._id), { status: mapped, externalSubmissionId: externalSubmissionId ?? item.externalSubmissionId, externalPublicationId: externalPublicationId ?? item.externalPublicationId, providerStatus: status, providerStatusMessage: message }); const siblings = await this.multiTargets.findByOrchestrationId(item.orchestrationId); await this.orchestrations.update(item.orchestrationId, { status: this.aggregator.orchestrationStatus(siblings) }); }
+  }
+  idempotencyKey(...parts: string[]): string { return createHash('sha256').update(parts.join(':')).digest('hex'); }
+}

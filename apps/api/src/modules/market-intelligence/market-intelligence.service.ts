@@ -14,7 +14,8 @@ import {
   MarketIntelligenceResponseDto,
   PaginatedMarketIntelligenceResponseDto,
 } from './dto';
-import { MarketIntelligence, MarketIntelligenceStatus } from './entities/market-intelligence.entity';
+import { MarketIntelligence} from './entities/market-intelligence.entity';
+import { MarketIntelligenceStatus } from './entities/market-intelligence.entity';
 
 @Injectable()
 export class MarketIntelligenceService {

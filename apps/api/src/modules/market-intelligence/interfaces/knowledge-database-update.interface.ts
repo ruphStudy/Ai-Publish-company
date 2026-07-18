@@ -1,4 +1,4 @@
-import { ScoredData } from './opportunity-scoring.interface';
+import type { ScoredData } from './opportunity-scoring.interface';
 
 export interface KnowledgeUpdateResult {
   recordsUpdated: number;

@@ -1,11 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import {
-  DATA_NORMALIZER_CONFIG_TOKEN,
-  DataNormalizerConfig,
+  DataNormalizerConfig} from '../config/data-normalizer.config';
+import {
+  DATA_NORMALIZER_CONFIG_TOKEN
 } from '../config/data-normalizer.config';
 import {
-  UnifiedMarketIntelligenceModel,
+  UnifiedMarketIntelligenceModel} from '../models/unified-market-intelligence.model';
+import {
   UnifiedTrendDirection,
 } from '../models/unified-market-intelligence.model';
 

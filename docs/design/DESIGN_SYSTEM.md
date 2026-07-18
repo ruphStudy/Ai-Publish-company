@@ -7,6 +7,8 @@
 
 ## Table of Contents
 
+
+
 1. [Product Design Philosophy](#1-product-design-philosophy)
 2. [UI Inspiration](#2-ui-inspiration)
 3. [Layout Standards](#3-layout-standards)

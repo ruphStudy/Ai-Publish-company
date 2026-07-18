@@ -1,5 +1,5 @@
-import { GoogleTrendsProviderConfig } from '../config/google-trends-provider.config';
-import {
+import type { GoogleTrendsProviderConfig } from '../config/google-trends-provider.config';
+import type {
   GoogleTrendsTrendRequest,
   GoogleTrendsTimelineResponse,
   GoogleTrendsRelatedTopicsResponse,

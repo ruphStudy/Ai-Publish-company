@@ -1,3 +1,4 @@
+import { Query } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -83,11 +84,10 @@ MonitoringExecutionSchema.index({ provider: 1, startTime: -1 });
 MonitoringExecutionSchema.index({ status: 1, createdAt: -1 });
 MonitoringExecutionSchema.index({ executionType: 1, createdAt: -1 });
 
-MonitoringExecutionSchema.pre(/^find/, function (next) {
-  const query = this as any;
+MonitoringExecutionSchema.pre(/^find/, function (this: Query<unknown, unknown>, next) {
 
-  if (!query.getOptions()?.includeDeleted) {
-    query.where({ isDeleted: { $ne: true } });
+  if (!this.getOptions()?.includeDeleted) {
+    this.where({ isDeleted: { $ne: true } });
   }
 
   next();

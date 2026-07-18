@@ -22,21 +22,23 @@ import {
 
 import { ProviderService } from './provider.service';
 import {
+  ProviderQueryDto} from './dto';
+import {
   CreateProviderRegistrationDto,
   UpdateProviderRegistrationDto,
-  ProviderQueryDto,
   ProviderRegistrationResponseDto,
   PaginatedProviderResponseDto,
   ProviderHealthSummaryResponseDto,
   ProviderValidationResponseDto,
 } from './dto';
 import { ProviderHealthResult } from './interfaces/provider.interface';
+import { DataSourceParams } from '../interfaces/data-source.interface';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { UserRole } from '../../auth/entities/user.entity';
-import type { User } from '../../auth/entities/user.entity';
+import { User } from '../../auth/entities/user.entity';
 
 @ApiTags('market-intelligence/providers')
 @Controller('market-intelligence/providers')
@@ -93,7 +95,7 @@ export class ProviderController {
   @ApiResponse({ status: HttpStatus.UNAUTHORIZED, description: 'Unauthorized' })
   async validateParams(
     @Param('key') key: string,
-    @Query() params: any,
+    @Query() params: DataSourceParams,
   ): Promise<ProviderValidationResponseDto> {
     return this.providerService.validateParams(key, params);
   }

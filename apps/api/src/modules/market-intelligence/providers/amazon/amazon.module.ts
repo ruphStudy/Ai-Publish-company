@@ -6,7 +6,8 @@ import { AmazonMockProviderAdapter } from './adapters/amazon-mock.adapter';
 import { AmazonResponseMapper } from './mappers/amazon-response.mapper';
 import { AmazonProviderValidator } from './validators/amazon.validator';
 import { AMAZON_CONFIG_TOKEN, AMAZON_ADAPTER_TOKEN } from './constants/amazon.constants';
-import { loadAmazonProviderConfig, AmazonProviderConfig } from './config/amazon-provider.config';
+import { AmazonProviderConfig } from './config/amazon-provider.config';
+import { loadAmazonProviderConfig } from './config/amazon-provider.config';
 
 @Module({
   providers: [

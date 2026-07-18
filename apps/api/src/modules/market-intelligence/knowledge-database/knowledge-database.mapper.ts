@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { UnifiedMarketIntelligenceModel } from '../data-normalizer/models/unified-market-intelligence.model';
+import type { UnifiedMarketIntelligenceModel } from '../data-normalizer/models/unified-market-intelligence.model';
 import { MarketKnowledgeResponseDto } from './dto';
 import { MarketKnowledge } from './entities/market-knowledge.entity';
 import { MarketKnowledgePersistenceData } from './interfaces/knowledge-database.repository.interface';

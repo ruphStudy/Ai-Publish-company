@@ -81,11 +81,4 @@ export class ConfigService {
     return this.configService.get('swagger.enabled', { infer: true });
   }
 
-  get<T = any>(key: string): T {
-    return this.configService.get(key as any) as T;
-  }
-
-  getOrThrow<T = any>(key: string): T {
-    return this.configService.getOrThrow(key as any) as T;
-  }
 }

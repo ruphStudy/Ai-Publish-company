@@ -157,7 +157,7 @@ export class CreateBookProjectDto {
   @IsString({ each: true })
   tags?: string[];
 
-  @ApiPropertyOptional({ type: 'object' })
+  @ApiPropertyOptional({ type: 'object', additionalProperties: true })
   @IsOptional()
   @IsObject()
   metadata?: Record<string, unknown>;

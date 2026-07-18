@@ -10,8 +10,9 @@ import {
   GOOGLE_TRENDS_ADAPTER_TOKEN,
 } from './constants/google-trends.constants';
 import {
-  loadGoogleTrendsProviderConfig,
-  GoogleTrendsProviderConfig,
+  GoogleTrendsProviderConfig} from './config/google-trends-provider.config';
+import {
+  loadGoogleTrendsProviderConfig
 } from './config/google-trends-provider.config';
 
 @Module({

@@ -1,4 +1,4 @@
-import { AmazonItem } from '../interfaces/amazon.interface';
+import type { AmazonItem } from '../interfaces/amazon.interface';
 
 const BOOKS_ROOT = { Id: '283155', DisplayName: 'Books', IsRoot: true };
 

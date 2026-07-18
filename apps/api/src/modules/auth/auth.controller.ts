@@ -9,7 +9,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import type { Request } from 'express';
+import { Request } from 'express';
 
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
@@ -19,6 +19,7 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { User } from './entities/user.entity';
+import { permissionsForRoles } from '@ai-publishing/shared';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -85,7 +86,7 @@ export class AuthController {
       firstName: user.firstName,
       lastName: user.lastName,
       roles: user.roles,
+      permissions: permissionsForRoles(user.roles),
     };
   }
 }
-

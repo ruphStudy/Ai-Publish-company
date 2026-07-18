@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
 import { Category } from './entities/category.entity';
 import { CreateCategoryDto, UpdateCategoryDto, CategoryQueryDto } from './dto';

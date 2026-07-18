@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { DataSourceProvider } from '../entities/market-intelligence.entity';
+import type { DataSourceProvider } from '../entities/market-intelligence.entity';
 import { MarketKnowledgeQueryDto } from './dto';
 import { MarketKnowledge } from './entities/market-knowledge.entity';
 import { KnowledgeDatabaseFactory } from './knowledge-database.factory';

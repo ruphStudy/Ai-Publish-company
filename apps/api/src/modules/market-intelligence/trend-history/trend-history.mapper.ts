@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { TrendHistoryResponseDto } from './dto';
+import type { TrendHistoryResponseDto } from './dto';
 import { TrendHistory } from './entities/trend-history.entity';
 
 @Injectable()

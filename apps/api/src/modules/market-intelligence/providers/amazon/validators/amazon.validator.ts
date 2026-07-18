@@ -68,7 +68,7 @@ export class AmazonProviderValidator {
   }
 
   private isValidSearchType(value: string): boolean {
-    return Object.values(AMAZON_SEARCH_TYPE).includes(value as any);
+    return (Object.values(AMAZON_SEARCH_TYPE) as readonly string[]).includes(value);
   }
 
   inferSearchType(params: DataSourceParams): string {

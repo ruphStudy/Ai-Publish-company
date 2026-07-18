@@ -40,7 +40,7 @@ export class CreateSchedulerJobDto {
   @IsOptional()
   dataType?: MarketDataType;
 
-  @ApiPropertyOptional({ description: 'Default job parameters', type: 'object', example: { market: 'US', language: 'en' } })
+  @ApiPropertyOptional({ description: 'Default job parameters', type: 'object', additionalProperties: true, example: { market: 'US', language: 'en' } })
   @IsObject()
   @IsOptional()
   params?: Record<string, unknown>;

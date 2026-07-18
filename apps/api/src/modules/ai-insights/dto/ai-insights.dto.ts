@@ -1,0 +1,8 @@
+import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { InsightCategory, InsightPriority, InsightRefreshMode, InsightRefreshStatus, InsightScope } from '../entities/ai-insight.entity';
+
+export class GenerateInsightsDto { @IsEnum(InsightScope) scope: InsightScope; @IsOptional() @IsString() projectId?: string; @IsOptional() @IsString() entityId?: string; @IsOptional() @IsString() aiProvider?: string; @IsOptional() @IsString() model?: string; @IsOptional() @IsString() correlationId?: string }
+export class InsightRefreshDto { @IsEnum(InsightScope) scope: InsightScope; @IsOptional() @IsString() projectId?: string; @IsOptional() entityIds?: string[]; @IsEnum(InsightRefreshMode) mode: InsightRefreshMode; @IsOptional() @IsString() idempotencyKey?: string; @IsOptional() @IsString() correlationId?: string }
+export class InsightQueryDto { @IsOptional() @IsString() projectId?: string; @IsOptional() @IsEnum(InsightScope) scope?: InsightScope; @IsOptional() @IsString() entityId?: string; @IsOptional() @IsEnum(InsightCategory) category?: InsightCategory; @IsOptional() @IsEnum(InsightPriority) priority?: InsightPriority; @IsOptional() @Type(() => Number) @Min(1) page = 1; @IsOptional() @Type(() => Number) @Min(1) limit = 25 }
+export class InsightRefreshQueryDto { @IsOptional() @IsString() projectId?: string; @IsOptional() @IsEnum(InsightScope) scope?: InsightScope; @IsOptional() @IsEnum(InsightRefreshStatus) status?: InsightRefreshStatus; @IsOptional() @Type(() => Number) @Min(1) page = 1; @IsOptional() @Type(() => Number) @Min(1) limit = 25 }

@@ -1,4 +1,4 @@
-import { DataSourceProvider } from '../../entities/market-intelligence.entity';
+import type { DataSourceProvider } from '../../entities/market-intelligence.entity';
 
 export enum UnifiedTrendDirection {
   RISING = 'rising',

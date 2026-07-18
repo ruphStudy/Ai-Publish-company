@@ -1,5 +1,5 @@
 import { cva, type VariantProps } from 'class-variance-authority';
-import { Sparkles, Brain, Cpu, CheckCircle2, Clock, XCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Sparkles, Brain, CheckCircle2, Clock, XCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const aiStatusBadgeVariants = cva(

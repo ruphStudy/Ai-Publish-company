@@ -1,5 +1,5 @@
-import { DataSourceProvider } from '../entities/market-intelligence.entity';
-import { DataSourceParams } from './data-source.interface';
+import type { DataSourceProvider } from '../entities/market-intelligence.entity';
+import type { DataSourceParams } from './data-source.interface';
 
 export interface ScheduledJobDescriptor {
   jobId: string;

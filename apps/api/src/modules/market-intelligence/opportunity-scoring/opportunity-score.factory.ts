@@ -1,8 +1,9 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import {
-  SCORING_STRATEGIES_TOKEN,
-  ScoringStrategy,
+  ScoringStrategy} from './interfaces/scoring-strategy.interface';
+import {
+  SCORING_STRATEGIES_TOKEN
 } from './interfaces/scoring-strategy.interface';
 import { OpportunityScoringContext } from './models/opportunity-score.model';
 

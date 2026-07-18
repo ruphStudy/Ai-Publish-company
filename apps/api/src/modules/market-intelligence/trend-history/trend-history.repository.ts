@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model, Types } from 'mongoose';
+import { FilterQuery, Model} from 'mongoose';
+import { Types } from 'mongoose';
 
-import { TrendHistoryQueryDto } from './dto';
+import type { TrendHistoryQueryDto } from './dto';
 import { TrendHistory } from './entities/trend-history.entity';
 import {
   PaginatedTrendHistoryResult,

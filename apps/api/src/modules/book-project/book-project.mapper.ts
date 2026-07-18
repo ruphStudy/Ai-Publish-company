@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Types } from 'mongoose';
 
-import { BookProjectResponseDto } from './dto';
+import type { BookProjectResponseDto } from './dto';
 import { BookProject } from './entities/book-project.entity';
 
 @Injectable()
